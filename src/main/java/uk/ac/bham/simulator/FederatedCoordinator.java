@@ -236,7 +236,7 @@ public class FederatedCoordinator implements Runnable {
     
     public boolean isNotifiedBid(Bid bid)
     {
-        boolean ret=false;
+        boolean ret;
         synchronized (NOTIFIED_BID_LOCK)
         {
             ret=this.notifiedBidList.contains(bid);
