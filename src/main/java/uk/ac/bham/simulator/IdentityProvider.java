@@ -27,7 +27,7 @@ public class IdentityProvider
         this.federatedCoordinator=federatedCoordinator;
     }
     
-    public void requestPayment(double price, Bid bid, AuctionAsk auctionAsk)
+    public void requestPayment(Double price, Bid bid)
     {
         Agent agent=bid.getAgent();
         agent.requestPayment(price, bid);

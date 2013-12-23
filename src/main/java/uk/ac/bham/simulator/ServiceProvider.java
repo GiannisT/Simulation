@@ -134,10 +134,9 @@ public class ServiceProvider
      * @param bid
      */
     
-    public void notifyAuctionWinner(ArrayList<IdentityResource> resourceList, 
-            IdentityProvider identityProvider, Bid bid)
+    public void notifyAuctionWinner(IdentityProvider identityProvider, Bid bid, Double price)
     {
-        
+        bid.getAgent().getIdentityProvider().requestPayment(price, bid);        
     }
     
     public boolean allocateResources(Bid bid)
