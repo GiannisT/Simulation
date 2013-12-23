@@ -346,7 +346,7 @@ public class FederatedCoordinator implements Runnable {
             Bid nextBid=this.getNextBid();
             if(nextBid!=null)
             {
-                Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.INFO, "a bid {0} was detected by {1} to search and auction ask winner", new Object[] {nextBid, FederatedCoordinator.getInstance()});
+                Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.INFO, "a {0} was detected by {1} to search and auction ask winner", new Object[] {nextBid, FederatedCoordinator.getInstance()});
                 
                 ArrayList<AuctionAsk> aList=this.getCurrentAsks();
                 AuctionAsk winnerAsk=this.compareWithCheapestAsk(nextBid, aList);
@@ -361,7 +361,7 @@ public class FederatedCoordinator implements Runnable {
                 }
                 // TODO notify to IdentityProvider of Agent ??
                 winnerAsk.getServiceProvider().notifyAuctionWinner(nextBid.getIdentityResources(), ip, nextBid);
-                Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.INFO, "the bid {0} had a winner", new Object[] {nextBid, winnerAsk});
+                Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.INFO, "the {0} had a winner {1}", new Object[] {nextBid, winnerAsk});
             }
             
             if(!AgentManager.getInstance().isRunning() && !ServiceProviderManager.getInstance().isRunning() && nextBid==null)

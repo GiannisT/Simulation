@@ -103,7 +103,7 @@ public class AgentManager implements Runnable {
             
             Agent agent=new Agent(ip);
             FederatedCoordinator.getInstance().addSession(agent);
-            Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new agent {0} was created and added to federated coordinator {1}", new Object[] {agent, FederatedCoordinator.getInstance()});
+            Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was created and added to {1}", new Object[] {agent, FederatedCoordinator.getInstance()});
             
             try {
                 wait(delay_first_bid);
@@ -113,7 +113,7 @@ public class AgentManager implements Runnable {
 
             Bid first_bid=agent.createBid();
             FederatedCoordinator.getInstance().publishBid(first_bid);
-            Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new bid {0} was published by the agent {1} to federated coordinator {2}", new Object[] {first_bid, agent, FederatedCoordinator.getInstance()});
+            Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {first_bid, agent, FederatedCoordinator.getInstance()});
 
             try {
                 wait(delay_next_bid);
@@ -122,7 +122,7 @@ public class AgentManager implements Runnable {
             }
             Bid next_bid=agent.createBid();
             FederatedCoordinator.getInstance().publishBid(next_bid);
-            Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new bid {0} was published by the agent {1} to federated coordinator {2}", new Object[] {next_bid, agent, FederatedCoordinator.getInstance()});
+            Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {next_bid, agent, FederatedCoordinator.getInstance()});
         }
         stop();
     }

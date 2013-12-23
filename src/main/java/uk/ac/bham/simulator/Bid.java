@@ -76,6 +76,12 @@ public class Bid
     @Override
     public String toString()
     {
-        return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
+        String resource="";
+        for (IdentityResource ir:this.getIdentityResources())
+        {
+            resource+="|"+ir.getResourceType().name()+","+ir.getPriority().name()+","+ir.getPrice();
+        }
+        resource=resource.substring(1);
+        return ""+this.getClass().getSimpleName()+"@"+this.hashCode()+" {"+resource+"}";
     }
 }
