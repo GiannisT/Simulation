@@ -360,7 +360,7 @@ public class FederatedCoordinator implements Runnable {
                     }
                 }
                 // TODO notify to IdentityProvider of Agent ??
-                winnerAsk.getServiceProvider().notifyAuctionWinner(nextBid.getIdentityResources(), ip, nextBid);
+                winnerAsk.getServiceProvider().notifyAuctionWinner(ip, nextBid, winnerAsk.getAdaptedPrice());
                 Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.INFO, "the {0} had a winner {1}", new Object[] {nextBid, winnerAsk});
             }
             
