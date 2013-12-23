@@ -330,12 +330,15 @@ public class FederatedCoordinator implements Runnable {
             Bid nextBid=this.getNextBid();
             if(nextBid!=null)
             {
+                Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.INFO, "a bid {0} was detected by {1} to search and auction ask winner", new Object[] {nextBid, FederatedCoordinator.getInstance()});
+                
                 ArrayList<AuctionAsk> aList=this.getCurrentAsks();
                 AuctionAsk winnerAsk=this.compareWithCheapestAsk(nextBid, aList);
                 this.notifyBid(nextBid);
                 IdentityProvider ip=nextBid.getAgent().getIdentityProvider();
                 // TODO notify to IdentityProvider of Agent ??
                 winnerAsk.getServiceProvider().notifyAuctionWinner(nextBid.getIdentityResources(), ip, nextBid);
+                Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.INFO, "the bid {0} had a winner", new Object[] {nextBid, winnerAsk});
             }
             
             if(!AgentManager.getInstance().isRunning() && !ServiceProviderManager.getInstance().isRunning() && nextBid==null)
@@ -351,4 +354,10 @@ public class FederatedCoordinator implements Runnable {
         AgentManager.getInstance().start();
         ServiceProviderManager.getInstance().start();
     }
+    
+    @Override
+    public String toString()
+    {
+        return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
+    }    
 }

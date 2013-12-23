@@ -70,5 +70,11 @@ public class AuctionAsk
     {
         this.maxDecrementPercentage = maxDecrementPercentage;
     }
+    
+    @Override
+    public String toString()
+    {
+        return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
+    }    
 
 }

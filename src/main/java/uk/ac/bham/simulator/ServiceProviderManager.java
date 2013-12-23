@@ -101,6 +101,7 @@ public class ServiceProviderManager implements Runnable {
             
             ServiceProvider serviceProvider=new ServiceProvider();
             FederatedCoordinator.getInstance().registerServiceProvider(serviceProvider);
+            Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new service provider {0} was created and added to federated coordinator {1}", new Object[] {serviceProvider, FederatedCoordinator.getInstance()});
             
             try {
                 wait(delay_first_bid);
@@ -109,6 +110,7 @@ public class ServiceProviderManager implements Runnable {
             }
             AuctionAsk first_auction_ask=new RandomAsk(serviceProvider); //serviceProvider.createBid(null);
             FederatedCoordinator.getInstance().publishAuctionAsk(first_auction_ask);
+            Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new auction ask {0} was published by the service provider {1} to federated coordinator {2}", new Object[] {first_auction_ask, serviceProvider, FederatedCoordinator.getInstance()});
 
         }
         stop();

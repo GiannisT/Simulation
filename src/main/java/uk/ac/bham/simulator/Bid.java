@@ -72,4 +72,10 @@ public class Bid
         }
         return ret;
     }
+    
+    @Override
+    public String toString()
+    {
+        return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
+    }
 }
