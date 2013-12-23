@@ -59,7 +59,18 @@ public class Bid
     
     public Agent getAgent()
     {
-        return agent;
+        return this.agent;
     }
     
+    public double getAdaptedPrice()
+    {
+        // TODO check implementation, this is a simple one
+        double ret=0;
+        
+        for (IdentityResource ir: getIdentityResources())
+        {
+            ret+=ir.getPrice()*ir.getPriority().getLevel();
+        }
+        return ret;
+    }
 }

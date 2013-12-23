@@ -7,23 +7,30 @@
 package uk.ac.bham.simulator;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Francisco Ramirez
  */
-public class FederatedCoordinator {
+public class FederatedCoordinator implements Runnable {
     ArrayList<ServiceProvider> serviceProviderList=null;
     ArrayList<IdentityProvider> identityProviderList=null;
     ArrayList<AuctionAsk> auctionAskList=null;
     ArrayList<Agent> agentList=null;
     ArrayList<Bid> bidList=null;
+    ArrayList<Bid> notifiedBidList=null;
+    boolean running=false;
+    
+    
     
     private final String SERVICE_PROVIDER_LOCK="SERVICE PROVIDER LOCK";
     private final String IDENTITY_PROVIDER_LOCK="IDENTITY PROVIDER LOCK";
     private final String AUCTION_ASK_LOCK="AUCTION ASK LOCK";
     private final String AGENT_LOCK="AGENT LOCK";
     private final String BID_LOCK="BID LOCK";
+    private final String NOTIFIED_BID_LOCK="NOTIFIED BID";
     
     public FederatedCoordinator()
     {
@@ -51,25 +58,57 @@ public class FederatedCoordinator {
         {
             bidList=new ArrayList<Bid>();
         }
+        
+        synchronized (NOTIFIED_BID_LOCK)
+        {
+            notifiedBidList=new ArrayList<Bid>();
+        }
     }
     
     
     
     public ArrayList<AuctionAsk> getCurrentAsks()
     {
-        ArrayList<AuctionAsk> asks=new ArrayList<AuctionAsk>();
+        ArrayList<AuctionAsk> askList=new ArrayList<AuctionAsk>();
         
         synchronized (AUCTION_ASK_LOCK)
         {
-            asks.addAll(auctionAskList);
+            askList.addAll(auctionAskList);
         }
         
-        return asks;
+        return askList;
     }
     
-    public void compareWithCheapestAsk()
+    public AuctionAsk getCheapestAsk(ArrayList<AuctionAsk> askList)
     {
+        AuctionAsk cheapestAsk=null;
         
+        for (AuctionAsk aa: askList)
+        {
+            if(cheapestAsk==null) cheapestAsk=aa;
+            else 
+            {
+                if(aa.getAdaptedPrice()<cheapestAsk.getAdaptedPrice())
+                {
+                    cheapestAsk=aa;
+                }
+            }
+        }
+        return cheapestAsk;
+    }
+    
+    public AuctionAsk compareWithCheapestAsk(Bid bid, ArrayList<AuctionAsk> askList)
+    {
+        AuctionAsk winnerAsk=null;
+        AuctionAsk cheapestAsk=getCheapestAsk(askList);
+        if(cheapestAsk!=null)
+        {
+            if(cheapestAsk.getAdaptedPrice() <= bid.getAdaptedPrice())
+            {
+                winnerAsk=cheapestAsk;
+            }
+        }
+        return winnerAsk;
     }
     
     /* The agent publish a bid to the FederatedCoordinator */
@@ -181,5 +220,94 @@ public class FederatedCoordinator {
         }
         
         return isRegistered;
+    }
+    
+    public void start()
+    {
+        Thread thread=new Thread(this, "FederatedCoordiantor");
+        this.running=true;
+        thread.start();
+    }
+    
+    public void stop()
+    {
+        this.running=false;
+    }
+    
+    public boolean isNotifiedBid(Bid bid)
+    {
+        boolean ret;
+        synchronized (NOTIFIED_BID_LOCK)
+        {
+            ret=this.notifiedBidList.contains(bid);
+        }
+        return ret;
+    }
+    
+    public void notifyBid(Bid bid)
+    {
+        boolean addit=false;
+        synchronized (BID_LOCK)
+        {
+            if(this.bidList.contains(bid) && !this.notifiedBidList.contains(bid))
+            {
+                // TODO is it required to remove from the bidList ??
+                // put in the notified list
+                addit=true;
+            }
+        }
+        if(addit)
+        {
+            synchronized (NOTIFIED_BID_LOCK)
+            {
+                // put in the notified list
+                this.notifiedBidList.add(bid);
+            }
+        }
+    }
+    
+    public Bid getNextBid()
+    {
+        Bid nextBid=null;
+        synchronized (BID_LOCK)
+        {
+            for(Bid b:this.bidList)
+            {
+                if(!this.isNotifiedBid(b))
+                {
+                    nextBid=b;
+                    break;
+                }
+            }
+        }
+        return nextBid;
+    }
+    
+    /**
+     * 
+     * Implements Runnable to do tasks of FederatedCoordinator
+     * 
+     */
+    
+    public synchronized void run()
+    {
+        while (running)
+        {
+            try {
+                wait(150);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Bid nextBid=this.getNextBid();
+            if(nextBid!=null)
+            {
+                ArrayList<AuctionAsk> aList=this.getCurrentAsks();
+                AuctionAsk winnerAsk=this.compareWithCheapestAsk(nextBid, aList);
+                this.notifyBid(nextBid);
+                IdentityProvider ip=nextBid.getAgent().getIdentityProvider();
+                // TODO which one notify to IdentityProvider of the AuctionAsk or Bid ??
+                winnerAsk.getServiceProvider().notifyAuctionWinner(nextBid.getIdentityResources(), ip, nextBid);
+            }
+        }
     }
 }
