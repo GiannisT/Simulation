@@ -7,46 +7,45 @@ import java.util.ArrayList;
  * to use in the simulation? How should the qualityFactor be used in this class?
  *
  */
-//import uk.ac.bham.simulator.IdentityResource;
-public class AuctionAsk {
-
-    final int maxDecrementPercentage = 20; //describes what is the maximum amount of money that a price set by SP can be increased
-    Double qualityFactor;
-    final int AlterSubmissionPerDay = 8; //describes how many times an SP can change or resubmit already submitted asks 
-    String[] TypeOfResources;
-    ServiceProvider serviceProvider;
-
-    public ServiceProvider getServiceProvider() {
-        return serviceProvider;
-    }
-
+public class AuctionAsk 
+{
     // TODO check naming convention for arraylist, compare to FederatedCoordinator.auctionAskList attribute
     ArrayList<IdentityResource> identityResources;
+    private Integer maxDecrementPercentage; 
+    //final int AlterSubmissionPerDay = 8; //describes how many times an SP can change or resubmit already submitted asks     
+    ServiceProvider serviceProvider;
 
-    public AuctionAsk() {
+    public AuctionAsk() 
+    {
         identityResources = new ArrayList<IdentityResource>();
     }
 
-    public ArrayList<IdentityResource> getIdentityResources() {
+    public AuctionAsk(ServiceProvider serviceProvider)
+    {
+        this();
+        this.serviceProvider = serviceProvider;
+    }
+    
+    public void configIdentityResources()
+    {
+        
+    } 
+    
+    public ServiceProvider getServiceProvider() 
+    {
+        return serviceProvider;
+    }
+
+    public ArrayList<IdentityResource> getIdentityResources() 
+    {
         return identityResources;
-    }
-
-    public void create(String[] ReqUtilityChar) {
-        IdentityResource Ir = new IdentityResource();
-        //Ir.create(ReqUtilityChar); //forwards the aks to the identity Resource
-    }
-
-    /**
-     * Create a statistical AsK
-     */
-    public void configIdentityResources() {
-
     }
 
     /* 
      The FederatedCoordinator invoke the getAdaptedPrice for each AuctionAsk
      */
-    public double getAdaptedPrice() {
+    public double getAdaptedPrice() 
+    {
         // TODO check implementation, this is a simple one
         double ret = 0;
 
@@ -54,6 +53,22 @@ public class AuctionAsk {
             ret += ir.getPrice() * ir.getPriority().getLevel();
         }
         return ret;
+    }
+
+    /**
+     * @return the maxDecrementPercentage
+     */
+    public Integer getMaxDecrementPercentage() 
+    {
+        return maxDecrementPercentage;
+    }
+
+    /**
+     * @param maxDecrementPercentage the maxDecrementPercentage to set
+     */
+    public void setMaxDecrementPercentage(Integer maxDecrementPercentage) 
+    {
+        this.maxDecrementPercentage = maxDecrementPercentage;
     }
 
 }
