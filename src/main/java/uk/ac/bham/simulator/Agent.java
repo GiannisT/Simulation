@@ -38,7 +38,7 @@ public class Agent
     
     public void requestPayment(double price, Bid bid)
     {
-
+        FederatedCoordinator.getInstance().payForServiceExecution(price, bid);
     }
     
     public IdentityProvider getIdentityProvider()
