@@ -15,9 +15,32 @@ import java.util.logging.Logger;*/
 
 public class ServiceProvider 
 {
-
+    
     StringBuffer publicK, privateK;
-
+    ArrayList<AuctionAsk> auctionAsks;
+    
+    public ServiceProvider()
+    {
+        auctionAsks = new ArrayList<AuctionAsk>();        
+    }
+    
+    public void createBid(ArrayList<IdentityResource> resources)
+    {
+        AuctionAsk auctionAsk = new RandomAsk(this);
+        auctionAsk.configIdentityResources();
+        auctionAsk.setMaxDecrementPercentage(Utilities.generateRandomInteger(1, 50));
+        auctionAsks.add(auctionAsk);        
+    }
+    
+    public void removeBid(Bid bid)
+    {
+       auctionAsks.remove(bid); 
+    }
+    
+    public void requestAuthentication()
+    {
+        
+    }
     /**
      * Constructs the public and private pair of cryptographic RSA keys for each Service provider
      *
