@@ -15,7 +15,8 @@ import java.util.logging.Logger;
 
 
 
-public class ServiceProvider {
+public class ServiceProvider 
+{
 
     StringBuffer publicK, privateK;
 
@@ -23,7 +24,8 @@ public class ServiceProvider {
      * Constructs the public and private pair of cryptographic RSA keys for each Service provider
      *
      */
-    public void GenerateRSAKeys() throws NoSuchAlgorithmException {
+    public void GenerateRSAKeys() throws NoSuchAlgorithmException 
+    {
 
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         keyGen.initialize(512);
@@ -49,7 +51,8 @@ public class ServiceProvider {
     }
 
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) 
+    {
         
         AuctionAsk ask=new AuctionAsk();
         ServiceProvider obj = new ServiceProvider();
@@ -98,7 +101,7 @@ public class ServiceProvider {
             
         }
         
-    }
+    }*/
     
 
     /**

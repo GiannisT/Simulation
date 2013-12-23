@@ -14,7 +14,7 @@ public class IdentityResource
     {
         Availability(1), 
         Anonymity(2), 
-        Security(3), 
+        Integrity(3), 
         Performance(4);
         
         private int id;

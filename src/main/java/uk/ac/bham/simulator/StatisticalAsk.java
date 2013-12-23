@@ -4,6 +4,16 @@ package uk.ac.bham.simulator;
  *Based on what model is the StatisticalAsk going to be developed??
 */
 
-public class StatisticalAsk extends AuctionAsk {
+public class StatisticalAsk extends AuctionAsk 
+{
+    public StatisticalAsk(ServiceProvider serviceProvider)
+    {
+        super(serviceProvider);
+    }
     
+    @Override
+    public void configIdentityResources()
+    {        
+        
+    }
 }
