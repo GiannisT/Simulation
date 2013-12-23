@@ -59,7 +59,7 @@ public class Bid
     
     public Agent getAgent()
     {
-        return null;
+        return agent;
     }
     
 }
