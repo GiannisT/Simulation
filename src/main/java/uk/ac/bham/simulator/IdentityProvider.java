@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author jejosp
+ * @author Francisco Ramirez
  */
 public class IdentityProvider {
     
