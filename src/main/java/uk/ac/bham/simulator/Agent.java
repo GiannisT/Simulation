@@ -17,12 +17,13 @@ public class Agent
         this.identityProvider = identityProvider;
     }
     
-    public void createBid()
+    public Bid createBid()
     {
         Bid bid = new RandomBid(this);
         bid.configIdentityResources();
         bid.setMaxIncrementPercentage(Utilities.generateRandomInteger(1, 30));
-        bids.add(bid);        
+        bids.add(bid);  
+        return bid;
     }
     
     public void removeBid(Bid bid)

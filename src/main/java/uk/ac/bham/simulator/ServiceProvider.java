@@ -24,12 +24,13 @@ public class ServiceProvider
         auctionAsks = new ArrayList<AuctionAsk>();        
     }
     
-    public void createAuctionAsk()
+    public AuctionAsk createAuctionAsk()
     {
         AuctionAsk auctionAsk = new RandomAsk(this);
         auctionAsk.configIdentityResources();
         auctionAsk.setMaxDecrementPercentage(Utilities.generateRandomInteger(1, 50));
-        auctionAsks.add(auctionAsk);        
+        auctionAsks.add(auctionAsk);  
+        return auctionAsk;
     }
     
     public void removeAuctionAsk(AuctionAsk auctionAsk)
