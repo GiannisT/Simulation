@@ -55,8 +55,7 @@ public class Bid
     public void setIdentityResources(ArrayList<IdentityResource> identityResources) {
         this.identityResources = identityResources;
     }
-     
-    
+         
     public Agent getAgent()
     {
         return this.agent;
