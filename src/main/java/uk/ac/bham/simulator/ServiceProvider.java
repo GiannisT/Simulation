@@ -140,9 +140,21 @@ public class ServiceProvider
         
     }
     
-    @Override
-    public String toString()
+    public boolean allocateResources(Bid bid)
     {
-        return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
+        executeJobs(bid.getIdentityResources());
+        return true;
     }
+    
+    private boolean executeJobs(ArrayList<IdentityResource> identityResources)
+    {
+        for (IdentityResource identityResource : identityResources)
+        {
+            //executing job by job...
+            System.out.println("Executing:"+identityResource.getResourceType());      
+        }
+        
+        return true;
+    }
+    
 }

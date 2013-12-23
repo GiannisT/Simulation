@@ -6,7 +6,8 @@ import java.util.ArrayList;
  *
  * @author Francisco Ramirez
  */
-public class IdentityProvider {
+public class IdentityProvider 
+{
     
     protected FederatedCoordinator federatedCoordinator;
     
@@ -26,15 +27,16 @@ public class IdentityProvider {
         this.federatedCoordinator=federatedCoordinator;
     }
     
-    public void requestPayment(double price, Bid bid)
+    public void requestPayment(double price, Bid bid, AuctionAsk auctionAsk)
     {
         Agent agent=bid.getAgent();
         agent.requestPayment(price, bid);
     }
     
-    public boolean notifyPayment(Bid bid)
+    public boolean notifyPayment(Bid bid, ServiceProvider serviceProvider)
     {
-        return true;
+        boolean allocation = serviceProvider.allocateResources(bid);                
+        return allocation;
     }
     
     /* TODO: Random authentication, 80% true / 20% false
