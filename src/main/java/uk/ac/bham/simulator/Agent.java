@@ -17,7 +17,7 @@ public class Agent
         this.identityProvider = identityProvider;
     }
     
-    public void createBid(ArrayList<IdentityResource> resources)
+    public void createBid()
     {
         Bid bid = new RandomBid(this);
         bid.configIdentityResources();
