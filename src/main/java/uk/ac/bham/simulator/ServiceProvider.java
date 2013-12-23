@@ -6,12 +6,12 @@ package uk.ac.bham.simulator;
  */ 
 
 
-import java.util.Scanner;
-import java.rmi.server.UID;
+/*import java.util.Scanner;
+import java.rmi.server.UID;*/
 import java.security.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+/*import java.util.logging.Level;
+import java.util.logging.Logger;*/
 
 
 
