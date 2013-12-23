@@ -24,7 +24,7 @@ public class ServiceProvider
         auctionAsks = new ArrayList<AuctionAsk>();        
     }
     
-    public void createBid(ArrayList<IdentityResource> resources)
+    public void createAuctionAsk()
     {
         AuctionAsk auctionAsk = new RandomAsk(this);
         auctionAsk.configIdentityResources();

@@ -17,8 +17,7 @@ public class Agent
         this.identityProvider = identityProvider;
     }
     
-    // TODO the resources param is not used
-    public Bid createBid(ArrayList<IdentityResource> resources)
+    public Bid createBid()
     {
         Bid bid = new RandomBid(this);
         bid.configIdentityResources();

@@ -23,6 +23,8 @@ public class FederatedCoordinator implements Runnable {
     ArrayList<Bid> notifiedBidList=null;
     boolean running=false;
     
+    private static final FederatedCoordinator instance=new FederatedCoordinator();
+    
     
     
     private final String SERVICE_PROVIDER_LOCK="SERVICE PROVIDER LOCK";
@@ -31,8 +33,9 @@ public class FederatedCoordinator implements Runnable {
     private final String AGENT_LOCK="AGENT LOCK";
     private final String BID_LOCK="BID LOCK";
     private final String NOTIFIED_BID_LOCK="NOTIFIED BID";
+    private final String RUNNING_LOCK="RUNNING LOCK";
     
-    public FederatedCoordinator()
+    private FederatedCoordinator()
     {
         synchronized (SERVICE_PROVIDER_LOCK)
         {
@@ -63,6 +66,13 @@ public class FederatedCoordinator implements Runnable {
         {
             notifiedBidList=new ArrayList<Bid>();
         }
+    }
+    
+
+    
+    public static FederatedCoordinator getInstance()
+    {
+        return FederatedCoordinator.instance;
     }
     
     
@@ -224,14 +234,33 @@ public class FederatedCoordinator implements Runnable {
     
     public void start()
     {
-        Thread thread=new Thread(this, "FederatedCoordiantor");
-        this.running=true;
-        thread.start();
+        synchronized (RUNNING_LOCK)
+        {
+            if(!running)
+            {
+                Thread thread=new Thread(this, "FederatedCoordiantor");
+                this.running=true;
+                thread.start();
+            }
+        }
     }
     
     public void stop()
     {
-        this.running=false;
+        synchronized (RUNNING_LOCK)
+        {
+            this.running=false;
+        }
+    }
+    
+    public boolean isRunning()
+    {
+        boolean ret;
+        synchronized (RUNNING_LOCK)
+        {
+            ret=this.running;
+        }
+        return ret;
     }
     
     public boolean isNotifiedBid(Bid bid)
@@ -291,7 +320,7 @@ public class FederatedCoordinator implements Runnable {
     
     public synchronized void run()
     {
-        while (running)
+        while (isRunning())
         {
             try {
                 wait(150);
@@ -305,9 +334,21 @@ public class FederatedCoordinator implements Runnable {
                 AuctionAsk winnerAsk=this.compareWithCheapestAsk(nextBid, aList);
                 this.notifyBid(nextBid);
                 IdentityProvider ip=nextBid.getAgent().getIdentityProvider();
-                // TODO which one notify to IdentityProvider of the AuctionAsk or Bid ??
+                // TODO notify to IdentityProvider of Agent ??
                 winnerAsk.getServiceProvider().notifyAuctionWinner(nextBid.getIdentityResources(), ip, nextBid);
             }
+            
+            if(!AgentManager.getInstance().isRunning() && !ServiceProviderManager.getInstance().isRunning() && nextBid==null)
+            {
+                stop();
+            }
         }
+    }
+    
+    public static void main(String[] args)
+    {
+        FederatedCoordinator.getInstance().start();
+        AgentManager.getInstance().start();
+        ServiceProviderManager.getInstance().start();
     }
 }
