@@ -32,9 +32,9 @@ public class ServiceProvider
         auctionAsks.add(auctionAsk);        
     }
     
-    public void removeBid(Bid bid)
+    public void removeAuctionAsk(AuctionAsk auctionAsk)
     {
-       auctionAsks.remove(bid); 
+       auctionAsks.remove(auctionAsk); 
     }
     
     public void requestAuthentication()
