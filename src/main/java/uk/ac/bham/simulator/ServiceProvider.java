@@ -13,8 +13,6 @@ import java.util.ArrayList;
 /*import java.util.logging.Level;
 import java.util.logging.Logger;*/
 
-
-
 public class ServiceProvider 
 {
 
@@ -26,13 +24,13 @@ public class ServiceProvider
      */
     public void GenerateRSAKeys() throws NoSuchAlgorithmException 
     {
-
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         keyGen.initialize(512);
         byte[] publicKey = keyGen.genKeyPair().getPublic().getEncoded();
         publicK = new StringBuffer();
 
-        for (int i = 0; i < publicKey.length; ++i) {
+        for (int i = 0; i < publicKey.length; ++i) 
+        {
             publicK.append(Integer.toHexString(0x0100 + (publicKey[i] & 0x00FF)).substring(1));
         }
 //        System.out.println(publicK);
@@ -41,7 +39,8 @@ public class ServiceProvider
         byte[] privateKey = keyGen.genKeyPair().getPrivate().getEncoded();
         privateK = new StringBuffer();
 
-        for (int i = 0; i < privateKey.length; ++i) {
+        for (int i = 0; i < privateKey.length; ++i) 
+        {
             privateK.append(Integer.toHexString(0x0100 + (privateKey[i] & 0x00FF)).substring(1));
         }
 
