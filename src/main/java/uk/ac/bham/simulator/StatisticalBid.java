@@ -6,8 +6,13 @@ package uk.ac.bham.simulator;
  */
 public class StatisticalBid extends Bid
 {
+    public StatisticalBid(Agent agent)
+    {
+        super(agent);
+    }
+    
     @Override
-    public void configIdentityResource()
+    public void configIdentityResources()
     {        
         
     }

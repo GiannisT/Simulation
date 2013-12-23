@@ -20,7 +20,7 @@ public class Agent
     public void createBid(ArrayList<IdentityResource> resources)
     {
         Bid bid = new RandomBid(this);
-        bid.configIdentityResource();
+        bid.configIdentityResources();
         bids.add(bid);        
     }
     

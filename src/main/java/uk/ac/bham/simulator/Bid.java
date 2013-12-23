@@ -23,7 +23,7 @@ public class Bid
         this.agent = agent;
     }
     
-    public void configIdentityResource()
+    public void configIdentityResources()
     {
         
     }

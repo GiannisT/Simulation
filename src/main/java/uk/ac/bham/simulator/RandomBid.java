@@ -22,7 +22,7 @@ public class RandomBid extends Bid
     }
     
     @Override
-    public void configIdentityResource()
+    public void configIdentityResources()
     {        
         int resourceTypeId = FIRSTRESOURCETYPE;
         while (resourceTypeId <= LASTRESOURCETYPE)        
