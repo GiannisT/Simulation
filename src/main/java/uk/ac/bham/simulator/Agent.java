@@ -41,6 +41,6 @@ public class Agent
     
     public IdentityProvider getIdentityProvider()
     {
-        return null;
+        return identityProvider;
     }
 }
