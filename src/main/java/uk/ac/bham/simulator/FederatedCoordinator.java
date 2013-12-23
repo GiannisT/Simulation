@@ -7,6 +7,7 @@
 package uk.ac.bham.simulator;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,6 +22,7 @@ public class FederatedCoordinator implements Runnable {
     ArrayList<Agent> agentList=null;
     ArrayList<Bid> bidList=null;
     ArrayList<Bid> notifiedBidList=null;
+    Map<Bid, AuctionAsk> waitingMap=null;
     boolean running=false;
     
     private static final FederatedCoordinator instance=new FederatedCoordinator();
@@ -32,8 +34,9 @@ public class FederatedCoordinator implements Runnable {
     private final String AUCTION_ASK_LOCK="AUCTION ASK LOCK";
     private final String AGENT_LOCK="AGENT LOCK";
     private final String BID_LOCK="BID LOCK";
-    private final String NOTIFIED_BID_LOCK="NOTIFIED BID";
+    private final String NOTIFIED_BID_LOCK="NOTIFIED BID LOCK";
     private final String RUNNING_LOCK="RUNNING LOCK";
+    private final String WAITING_MAP_LOCK="WAITING MAP LOCK";
     
     private FederatedCoordinator()
     {
@@ -65,6 +68,11 @@ public class FederatedCoordinator implements Runnable {
         synchronized (NOTIFIED_BID_LOCK)
         {
             notifiedBidList=new ArrayList<Bid>();
+        }
+        
+        synchronized (WAITING_MAP_LOCK)
+        { 
+            waitingMap=new java.util.HashMap<Bid, AuctionAsk>();
         }
     }
     
@@ -182,7 +190,15 @@ public class FederatedCoordinator implements Runnable {
         
         if(existsIdentityProvider && existsAgent)
         {
-            identityProvider.notifyPayment(bid);
+            synchronized (WAITING_MAP_LOCK)
+            {
+                AuctionAsk winnerAsk=waitingMap.get(bid);
+                if(winnerAsk!=null)
+                {
+                    ServiceProvider serviceProvider=winnerAsk.getServiceProvider();
+                    identityProvider.notifyPayment(bid, serviceProvider);
+                }
+            }
         }
     }
     
@@ -336,6 +352,13 @@ public class FederatedCoordinator implements Runnable {
                 AuctionAsk winnerAsk=this.compareWithCheapestAsk(nextBid, aList);
                 this.notifyBid(nextBid);
                 IdentityProvider ip=nextBid.getAgent().getIdentityProvider();
+                synchronized (WAITING_MAP_LOCK)
+                {
+                    if(!waitingMap.containsKey(nextBid))
+                    {
+                        waitingMap.put(nextBid, winnerAsk);
+                    }
+                }
                 // TODO notify to IdentityProvider of Agent ??
                 winnerAsk.getServiceProvider().notifyAuctionWinner(nextBid.getIdentityResources(), ip, nextBid);
                 Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.INFO, "the bid {0} had a winner", new Object[] {nextBid, winnerAsk});

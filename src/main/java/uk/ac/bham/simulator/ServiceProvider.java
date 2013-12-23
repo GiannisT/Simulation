@@ -157,4 +157,11 @@ public class ServiceProvider
         return true;
     }
     
+
+    @Override
+    public String toString()
+    {
+        return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
+    }
+
 }
