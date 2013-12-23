@@ -17,12 +17,15 @@ public class Agent
         this.identityProvider = identityProvider;
     }
     
-    public void createBid(ArrayList<IdentityResource> resources)
+    // TODO the resources param is not used
+    public Bid createBid(ArrayList<IdentityResource> resources)
     {
         Bid bid = new RandomBid(this);
         bid.configIdentityResources();
         bid.setMaxIncrementPercentage(Utilities.generateRandomInteger(1, 30));
         bids.add(bid);        
+        
+        return bid;
     }
     
     public void removeBid(Bid bid)
