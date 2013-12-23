@@ -45,4 +45,10 @@ public class Agent
     {
         return identityProvider;
     }
+    
+    @Override
+    public String toString()
+    {
+        return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
+    }    
 }
