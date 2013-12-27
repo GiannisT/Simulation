@@ -128,9 +128,11 @@ public class ServiceProviderManager extends TimerTask {
         {
             if(counter>0)
             {
-                AuctionAsk first_auction_ask=new RandomAsk(serviceProvider); //serviceProvider.createBid(null);
-                FederatedCoordinator.getInstance().publishAuctionAsk(first_auction_ask);
-                Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {first_auction_ask, serviceProvider, FederatedCoordinator.getInstance()});
+                AuctionAsk ask=new RandomAsk(serviceProvider); //serviceProvider.createBid(null);
+                ask.configIdentityResources();
+                
+                FederatedCoordinator.getInstance().publishAuctionAsk(ask);
+                Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {ask, serviceProvider, FederatedCoordinator.getInstance()});
             }
             counter--;
             if(counter<=0)

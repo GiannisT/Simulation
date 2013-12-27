@@ -7,6 +7,7 @@
 package uk.ac.bham.simulator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,40 +41,13 @@ public class FederatedCoordinator implements Runnable {
     
     private FederatedCoordinator()
     {
-        synchronized (SERVICE_PROVIDER_LOCK)
-        {
-            serviceProviderList=new ArrayList<ServiceProvider>();
-        }
-        
-        synchronized (IDENTITY_PROVIDER_LOCK)
-        {
-            identityProviderList=new ArrayList<IdentityProvider>();
-        }
-        
-        synchronized (AUCTION_ASK_LOCK)
-        {
-            auctionAskList=new ArrayList<AuctionAsk>();
-        }
-        
-        synchronized (AGENT_LOCK)
-        {
-            agentList=new ArrayList<Agent>();
-        }
-        
-        synchronized (BID_LOCK)
-        {
-            bidList=new ArrayList<Bid>();
-        }
-        
-        synchronized (NOTIFIED_BID_LOCK)
-        {
-            notifiedBidList=new ArrayList<Bid>();
-        }
-        
-        synchronized (WAITING_MAP_LOCK)
-        { 
-            waitingMap=new java.util.HashMap<Bid, AuctionAsk>();
-        }
+        serviceProviderList=new ArrayList<ServiceProvider>();
+        identityProviderList=new ArrayList<IdentityProvider>();
+        auctionAskList=new ArrayList<AuctionAsk>();
+        agentList=new ArrayList<Agent>();
+        bidList=new ArrayList<Bid>();
+        notifiedBidList=new ArrayList<Bid>();
+        waitingMap=new java.util.HashMap<Bid, AuctionAsk>();
     }
     
 
@@ -367,6 +341,70 @@ public class FederatedCoordinator implements Runnable {
             if(!AgentManager.getInstance().isRunning() && !ServiceProviderManager.getInstance().isRunning() && nextBid==null)
             {
                 stop();
+            }
+        }
+        
+        this.printWinnerAuctionAsk();
+    }
+    
+    public void printWinnerAuctionAsk()
+    {
+        
+        System.out.printf("%n%n%-30s %-30s %n", "Bid", "Auction Ask Winner");
+        synchronized (WAITING_MAP_LOCK)
+        {
+            for (Map.Entry<Bid, AuctionAsk> entry: this.waitingMap.entrySet())
+            {
+                Bid bid=entry.getKey();
+                AuctionAsk ask=entry.getValue();
+                
+                Map<Integer, IdentityResource[]> join=new HashMap<Integer, IdentityResource[]>();
+                for(IdentityResource ir:bid.getIdentityResources())
+                {
+                    int id=ir.getResourceType().getId();
+                    if(!join.containsKey(id))
+                    {
+                        join.put(id, new IdentityResource[]{null,null});
+                    }
+                    join.get(id)[0]=ir;
+                }
+                for(IdentityResource ir:ask.getIdentityResources())
+                {
+                    int id=ir.getResourceType().getId();
+                    if(!join.containsKey(id))
+                    {
+                        join.put(id, new IdentityResource[]{null,null});
+                    }
+                    join.get(id)[1]=ir;
+                }
+                
+                System.out.printf("%-30s %-30s%n", bid.hashCode(), ask.hashCode());
+                
+                for (Map.Entry<Integer, IdentityResource[]> j:join.entrySet())
+                {
+                    IdentityResource.ResourceType rt=IdentityResource.ResourceType.createByNumber(j.getKey());
+                    IdentityResource irBid=j.getValue()[0];
+                    IdentityResource irAsk=j.getValue()[1];
+                    String pnameBid="";
+                    String pnameAsk="";
+                    Integer priceBid=0;
+                    Integer priceAsk=0;
+                    
+                    
+                    if(irBid!=null) 
+                    {
+                        pnameBid=irBid.getPriority().name();
+                        priceBid=irBid.getPrice();
+                    }
+                    if(irAsk!=null)
+                    {
+                        pnameAsk=irAsk.getPriority().name();
+                        priceAsk=irAsk.getPrice();
+                    }
+                    System.out.printf("%-15s %-10s %5s %-10s %5s %n", rt.name(), pnameBid, priceBid, pnameAsk, priceAsk);
+                    //System.out.printf("%-30s %-30s %n", bid.toString(), ask.toString());
+                }
+                System.out.println();
             }
         }
     }
