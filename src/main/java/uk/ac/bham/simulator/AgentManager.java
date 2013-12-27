@@ -54,7 +54,7 @@ public class AgentManager extends TimerTask {
 
                 this.timer=new Timer("Agent Manager", true);
                 this.running=true;
-                timer.schedule(this, delayNewAgent, delayNewAgent);
+                timer.schedule(this, delayNewAgent+2000, delayNewAgent);
                 //Thread thread=new Thread(this, "Agent Manager");
                 //thread.start();
             }
@@ -93,8 +93,11 @@ public class AgentManager extends TimerTask {
         if (isRunning() && counter>0)
         {   
             Agent agent=new Agent(ip);
-            //FederatedCoordinator.getInstance().addSession(agent);
+            FederatedCoordinator.getInstance().addSession(agent);
             Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was created and added to {1}", new Object[] {agent, FederatedCoordinator.getInstance()});
+            
+            RandomBidCreator creator=new RandomBidCreator(agent, 2);
+            creator.start();
         }
         counter--;
         if (counter<=0)
