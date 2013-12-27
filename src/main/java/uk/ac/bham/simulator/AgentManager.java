@@ -93,14 +93,8 @@ public class AgentManager extends TimerTask {
         if (isRunning() && counter>0)
         {   
             Agent agent=new Agent(ip);
-            FederatedCoordinator.getInstance().addSession(agent);
+            //FederatedCoordinator.getInstance().addSession(agent);
             Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was created and added to {1}", new Object[] {agent, FederatedCoordinator.getInstance()});
-
-
-
-            Bid next_bid=agent.createBid();
-            FederatedCoordinator.getInstance().publishBid(next_bid);
-            Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {next_bid, agent, FederatedCoordinator.getInstance()});
         }
         counter--;
         if (counter<=0)
