@@ -6,6 +6,8 @@
 
 package uk.ac.bham.simulator;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,13 +15,16 @@ import java.util.logging.Logger;
  *
  * @author Francisco Ramirez
  */
-public class ServiceProviderManager implements Runnable {
+public class ServiceProviderManager extends TimerTask {
         
     private static final ServiceProviderManager instance=new ServiceProviderManager();
     
     private boolean running;
     
     public static final String RUNNING_LOCK="RUNNING LOCK";
+    
+    private int counter;
+    private Timer timer;
     
     private ServiceProviderManager()
     {
@@ -42,9 +47,15 @@ public class ServiceProviderManager implements Runnable {
         {
             if(!this.running)
             {
-                Thread thread=new Thread(this, "Service Provider Manager");
+                this.counter=50;
+                
+                long delayNewServiceProvider=Utilities.generateRandomInteger(1, 10)*10;
+
+                this.timer=new Timer("Service Provider Manager", true);
                 this.running=true;
-                thread.start();
+                timer.schedule(this, delayNewServiceProvider, delayNewServiceProvider);
+                //Thread thread=new Thread(this, "Service Provider Manager");
+                //thread.start();
             }
         }
     }
@@ -74,45 +85,58 @@ public class ServiceProviderManager implements Runnable {
      */
     public synchronized void run()
     {
-        int counter=0;
-        IdentityProvider ip=new IdentityProvider();
-        FederatedCoordinator.getInstance().registerIdentityProvider(ip);
+        //IdentityProvider ip=new IdentityProvider();
+        //FederatedCoordinator.getInstance().registerIdentityProvider(ip);
         
-        while (isRunning())
+        if (isRunning() && counter >0)
         {
-            counter++;
-            // TODO at the moment, fifty service provider with one auction ask eachone will be created
-            if(counter>50) break;
-            
-            long delay_new_service_provider=Utilities.generateRandomInteger(1, 10)*10;
-            long delay_first_bid=Utilities.generateRandomInteger(1, 10)*10;
-            try {
-                wait(150);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            // wait delay_new_agent miliseconds before create a new Agent
-            try {
-                wait(delay_new_service_provider);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
             ServiceProvider serviceProvider=new ServiceProvider();
             FederatedCoordinator.getInstance().registerServiceProvider(serviceProvider);
             Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new {0} was created and added to {1}", new Object[] {serviceProvider, FederatedCoordinator.getInstance()});
-            
-            try {
-                wait(delay_first_bid);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            AuctionAsk first_auction_ask=new RandomAsk(serviceProvider); //serviceProvider.createBid(null);
-            FederatedCoordinator.getInstance().publishAuctionAsk(first_auction_ask);
-            Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {first_auction_ask, serviceProvider, FederatedCoordinator.getInstance()});
 
+            RandomAskCreator creator=new RandomAskCreator(serviceProvider, 2);
+            creator.start();
         }
-        stop();
+        counter--;
+        if(counter<=0)
+        {
+            this.timer.cancel();
+            stop();
+        }
+    }
+    
+    class RandomAskCreator extends TimerTask
+    {
+        ServiceProvider serviceProvider;
+        Timer timer;
+        int counter=0;
+        
+        public RandomAskCreator(ServiceProvider sp, int c)
+        {
+            this.serviceProvider=sp;
+            this.timer=new Timer("AuctionAsk Creator", true);
+            this.counter=c;
+        }
+        
+        public void start()
+        {
+            long delayNewAsk=Utilities.generateRandomInteger(1, 10)*10;
+            this.timer.schedule(this, delayNewAsk, delayNewAsk);            
+        }
+        
+        public void run()
+        {
+            if(counter>0)
+            {
+                AuctionAsk first_auction_ask=new RandomAsk(serviceProvider); //serviceProvider.createBid(null);
+                FederatedCoordinator.getInstance().publishAuctionAsk(first_auction_ask);
+                Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {first_auction_ask, serviceProvider, FederatedCoordinator.getInstance()});
+            }
+            counter--;
+            if(counter<=0)
+            {
+                timer.cancel();
+            }
+        }
     }
 }

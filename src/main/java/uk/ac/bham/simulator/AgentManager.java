@@ -6,6 +6,8 @@
 
 package uk.ac.bham.simulator;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,13 +15,16 @@ import java.util.logging.Logger;
  *
  * @author Francisco Ramirez
  */
-public class AgentManager implements Runnable {
+public class AgentManager extends TimerTask {
     
     private static final AgentManager instance=new AgentManager();
     
     private boolean running;
     
     public static final String RUNNING_LOCK="RUNNING LOCK";
+    
+    private int counter;
+    private Timer timer;
     
     private AgentManager()
     {
@@ -42,9 +47,16 @@ public class AgentManager implements Runnable {
         {
             if(!this.running)
             {
-                Thread thread=new Thread(this, "Agent Manager");
+                // TODO at the moment, ten agents with two bids eachone will be created
+                this.counter=10;
+
+                long delayNewAgent=Utilities.generateRandomInteger(1, 10)*10+250;                
+
+                this.timer=new Timer("Agent Manager", true);
                 this.running=true;
-                thread.start();
+                timer.schedule(this, delayNewAgent, delayNewAgent);
+                //Thread thread=new Thread(this, "Agent Manager");
+                //thread.start();
             }
         }
     }
@@ -75,55 +87,61 @@ public class AgentManager implements Runnable {
     public synchronized void run()
     {
         // TODO for this fase, a single IdentityProvider will be used
-        int counter=0;
         IdentityProvider ip=new IdentityProvider();
         FederatedCoordinator.getInstance().registerIdentityProvider(ip);
         
-        while (isRunning())
-        {
-            counter++;
-            // TODO at the moment, ten agents with two bids eachone will be created
-            if(counter>10) break;
-            
-            long delay_new_agent=Utilities.generateRandomInteger(1, 10)*10+250;
-            long delay_first_bid=Utilities.generateRandomInteger(1, 10)*10+250;
-            long delay_next_bid=Utilities.generateRandomInteger(1, 10)*10+250;
-            try {
-                wait(150);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            // wait delay_new_agent miliseconds before create a new Agent
-            try {
-                wait(delay_new_agent);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
+        if (isRunning() && counter>0)
+        {   
             Agent agent=new Agent(ip);
             FederatedCoordinator.getInstance().addSession(agent);
             Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was created and added to {1}", new Object[] {agent, FederatedCoordinator.getInstance()});
-            
-            try {
-                wait(delay_first_bid);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
 
-            Bid first_bid=agent.createBid();
-            FederatedCoordinator.getInstance().publishBid(first_bid);
-            Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {first_bid, agent, FederatedCoordinator.getInstance()});
 
-            try {
-                wait(delay_next_bid);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
             Bid next_bid=agent.createBid();
             FederatedCoordinator.getInstance().publishBid(next_bid);
             Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {next_bid, agent, FederatedCoordinator.getInstance()});
         }
-        stop();
+        counter--;
+        if (counter<=0)
+        {
+            this.timer.cancel();
+            stop();
+        }
+    }
+    
+    class RandomBidCreator extends TimerTask
+    {
+        Agent agent;
+        Timer timer;
+        int counter=0;
+
+        public RandomBidCreator(Agent a, int c)
+        {
+            this.agent=a;
+            this.timer=new Timer("Bid Creator", true);
+            this.counter=c;
+        }
+
+        public void start()
+        {
+            long delayNewBid=Utilities.generateRandomInteger(1, 10)*10+250;
+            this.timer.schedule(this, delayNewBid, delayNewBid); 
+        }
+        
+        public void run()
+        {
+            if(counter>0)
+            {
+                Bid bid=agent.createBid();
+                FederatedCoordinator.getInstance().publishBid(bid);
+                Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {bid, agent, FederatedCoordinator.getInstance()});
+            }
+            counter--;
+            if(counter<=0)
+            {
+                timer.cancel();
+            }
+        }
     }
 }
