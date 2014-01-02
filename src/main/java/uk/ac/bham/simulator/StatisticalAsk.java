@@ -21,8 +21,7 @@ public class StatisticalAsk extends AuctionAsk {
     public void configIdentityResources() {
         int resourceTypeId = FIRSTRESOURCETYPE;
         int AvailSum = 0, AnonSum = 0, InteSum = 0, PerfSum = 0;
-        SecureRandom ran = new SecureRandom();
-
+  
         while (resourceTypeId <= LASTRESOURCETYPE) {
             IdentityResource identityResource = new IdentityResource();
 
@@ -55,7 +54,7 @@ public class StatisticalAsk extends AuctionAsk {
 
                 identityResource.setPrice(MINPRICE);
                 identityResource.setResourceType(IdentityResource.ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
-                identityResource.setDurationOfAuction(Utilities.generateRandomInteger(100000, 200000));
+                identityResource.setDurationOfAuction(Utilities.generateRandomInteger(40000, 100000));
                 getIdentityResources().add(identityResource);
                 
        }else{

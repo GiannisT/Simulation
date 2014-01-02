@@ -37,6 +37,7 @@ public class StatisticalBid extends Bid {
                 }
                 price = (int) (sum / CurAsk.size()) + (5 * sum) / 100; //a sensible price for start bidding is the avg of all prices for this resource + 5%
                 identityResource.setPrice(price);
+                
             } else if (CurAsk.isEmpty()) { // if there are no current Asks to compare prices the user should randomly specify a price
                 identityResource.setPrice(Utilities.generateRandomInteger(30, 60)); //first valuation for start bidding
             }
