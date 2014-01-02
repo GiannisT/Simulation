@@ -428,8 +428,8 @@ public class FederatedCoordinator implements Runnable {
     public static void main(String[] args)
     {
         gr=new Graph();
-        gr.GenerateGraph();
         FederatedCoordinator.getInstance().start();
+        gr.GenerateGraph();
         AgentManager.getInstance().start();
         ServiceProviderManager.getInstance().start();
     }

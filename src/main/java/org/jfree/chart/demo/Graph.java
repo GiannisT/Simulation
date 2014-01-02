@@ -2,6 +2,7 @@ package org.jfree.chart.demo;
 
 import uk.ac.bham.simulator.*;
 import java.util.ArrayList;
+import org.jfree.ui.RefineryUtilities;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -18,7 +19,9 @@ public class Graph extends ApplicationFrame {
     ArrayList<Double> SubmittedTime = new ArrayList<Double>();
     ArrayList<Double> FinishTime = new ArrayList<Double>();
 
-    public Graph(){}
+    public Graph(){
+        super("noname");
+    }
     
      /**
      * This function should be called to continously check if the Simulator program has finished hence to produce the
@@ -27,6 +30,7 @@ public class Graph extends ApplicationFrame {
     public void GenerateGraph(){
     
         Thread t = new Thread() {
+            @Override
             public void run() {
 
                 if (!FederatedCoordinator.getInstance().isRunning()) {
@@ -85,6 +89,5 @@ public class Graph extends ApplicationFrame {
         XYPlot plot = (XYPlot) chart.getPlot();
         return chart;
     }
-    
     
 }
