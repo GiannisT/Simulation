@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jfree.chart.demo.Graph;
 
 /**
  *
@@ -38,6 +39,7 @@ public class FederatedCoordinator implements Runnable {
     private final String NOTIFIED_BID_LOCK="NOTIFIED BID LOCK";
     private final String RUNNING_LOCK="RUNNING LOCK";
     private final String WAITING_MAP_LOCK="WAITING MAP LOCK";
+    static Graph gr;
     
     private FederatedCoordinator()
     {
@@ -100,6 +102,7 @@ public class FederatedCoordinator implements Runnable {
                 winnerAsk=cheapestAsk;
             }
         }
+        gr.setChartValues(bid.getTimeOfSubmission(), (double)System.currentTimeMillis()); //update the dataset that will be used to develop the graph
         return winnerAsk;
     }
     
@@ -411,6 +414,8 @@ public class FederatedCoordinator implements Runnable {
     
     public static void main(String[] args)
     {
+        gr=new Graph();
+        gr.GenerateGraph();
         FederatedCoordinator.getInstance().start();
         AgentManager.getInstance().start();
         ServiceProviderManager.getInstance().start();

@@ -18,9 +18,10 @@ public class Agent
     }
     
     public Bid createBid()
-    {
+    {//ADD AN IF STATEMENT CHOSSING BETWEEN RANDOM AND STATISTICAL HERE
+        
         Bid bid = new RandomBid(this);
-        bid.configIdentityResources();
+        bid.configIdentityResources(); 
         bid.setMaxIncrementPercentage(Utilities.generateRandomInteger(1, 30));
         bids.add(bid);  
         return bid;

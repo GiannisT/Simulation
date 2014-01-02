@@ -1,5 +1,6 @@
 package uk.ac.bham.simulator;
 
+import java.util.ArrayList;
 import uk.ac.bham.simulator.IdentityResource.Priority;
 import uk.ac.bham.simulator.IdentityResource.ResourceType;
 
@@ -25,12 +26,14 @@ public class RandomBid extends Bid
     public void configIdentityResources()
     {        
         int resourceTypeId = FIRSTRESOURCETYPE;
+         
         while (resourceTypeId <= LASTRESOURCETYPE)        
         {
             IdentityResource identityResource = new IdentityResource();
             identityResource.setPrice(Utilities.generateRandomInteger(MINPRICE, MAXPRICE));
             identityResource.setPriority(Priority.createByNumber(Utilities.generateRandomInteger(MINPRIORITY,MAXPRIORITY)));
             identityResource.setResourceType(ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
+            setTimeOfSubmission(System.currentTimeMillis()); //used for creating the points in the graph
             getIdentityResources().add(identityResource);
         }       
     }

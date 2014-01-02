@@ -84,4 +84,17 @@ public class Bid
         resource=resource.substring(1);
         return ""+this.getClass().getSimpleName()+"@"+this.hashCode()+" {"+resource+"}";
     }
+    
+    
+    //  ------------------------------------Remove if Graph not needed---------------------------------
+    private Double SubmissionTime;
+    
+    public void setTimeOfSubmission(double time){
+        this.SubmissionTime=time;
+    }
+    
+    public double getTimeOfSubmission(){
+        return SubmissionTime;
+    }
+       
 }

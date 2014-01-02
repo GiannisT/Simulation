@@ -6,9 +6,12 @@ package uk.ac.bham.simulator;
  */
 public class IdentityResource 
 {
-    private Integer price; 
+    private Integer price;
+    private Integer MaxPrice;
+    private Long Duration;
     private ResourceType resourceType;
     private Priority priority;   
+    
     
     public enum ResourceType 
     {
@@ -118,5 +121,22 @@ public class IdentityResource
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
-       
+    
+    public void setDurationOfAuction (long time){
+        this.Duration=time;
+    }
+    
+    public long getDurationOfAuction(){
+        return Duration;
+    }
+    
+    public void setMaxPrice(int MaxPrice){
+        this.MaxPrice=MaxPrice;
+    }
+    
+    public int getMaxPrice(){
+        return MaxPrice;
+    }
+    
+  
 }
