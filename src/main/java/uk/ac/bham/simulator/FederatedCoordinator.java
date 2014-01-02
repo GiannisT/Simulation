@@ -337,7 +337,17 @@ public class FederatedCoordinator implements Runnable {
                     }
                 }
                 // TODO notify to IdentityProvider of Agent ??
-                winnerAsk.getServiceProvider().notifyAuctionWinner(ip, nextBid, winnerAsk.getAdaptedPrice());
+                try
+                {
+                    if(winnerAsk!=null)
+                    {
+                        winnerAsk.getServiceProvider().notifyAuctionWinner(ip, nextBid, winnerAsk.getAdaptedPrice());
+                    }
+                }
+                catch (Exception exception)
+                {
+                    System.out.println("debug why exception here..."+exception);
+                }
                 Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.INFO, "the {0} had a winner {1}", new Object[] {nextBid, winnerAsk});
             }
             
@@ -352,6 +362,9 @@ public class FederatedCoordinator implements Runnable {
     
     public void printWinnerAuctionAsk()
     {
+        System.out.println("Number of bids: "+this.bidList.size());
+        System.out.println("Number of service providers: "+this.serviceProviderList.size());
+        
         
         System.out.printf("%n%n%-30s %-30s %n", "Bid", "Auction Ask Winner");
         synchronized (WAITING_MAP_LOCK)
@@ -381,7 +394,7 @@ public class FederatedCoordinator implements Runnable {
                     join.get(id)[1]=ir;
                 }
                 
-                System.out.printf("%-30s %-30s%n", bid.hashCode(), ask.hashCode());
+                System.out.printf("%-30s %-30s%n", bid.hashCode()+"("+bid.getAdaptedPrice()+")", ask.hashCode()+"("+ask.getAdaptedPrice()+")");
                 
                 for (Map.Entry<Integer, IdentityResource[]> j:join.entrySet())
                 {
