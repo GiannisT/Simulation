@@ -419,7 +419,8 @@ public class FederatedCoordinator implements Runnable {
                 String askText="";
                 if(ask!=null)
                 {
-                    askText=ask.hashCode()+"("+ask.getAdaptedPrice()+")";
+                    int revenue=ask.getServiceProvider().getRevenue();
+                    askText=ask.hashCode()+"("+ask.getAdaptedPrice()+" with revenue="+revenue+")";
                 }
                 
                 System.out.printf("%-30s %-30s%n", bidText, askText);
