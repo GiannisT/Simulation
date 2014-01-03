@@ -90,7 +90,7 @@ public class Bid
     private Double SubmissionTime;
     
     public void setTimeOfSubmission(double time){
-        this.SubmissionTime=time;
+        this.SubmissionTime=time-FederatedCoordinator.getInstance().Initialtime; //by applying this we get the exact time a bid has submitted since the begining of running this software
     }
     
     public double getTimeOfSubmission(){

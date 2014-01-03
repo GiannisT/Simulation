@@ -19,6 +19,7 @@ import org.jfree.chart.demo.Graph;
  * @author Francisco Ramirez
  */
 public class FederatedCoordinator implements Runnable {
+    static Double Initialtime;
     ArrayList<ServiceProvider> serviceProviderList=null;
     ArrayList<IdentityProvider> identityProviderList=null;
     ArrayList<AuctionAsk> auctionAskList=null;
@@ -42,7 +43,7 @@ public class FederatedCoordinator implements Runnable {
     private final String NOTIFIED_BID_LOCK="NOTIFIED BID LOCK";
     private final String RUNNING_LOCK="RUNNING LOCK";
     private final String WAITING_MAP_LOCK="WAITING MAP LOCK";
-    static Graph gr;
+    
     
     private FederatedCoordinator()
     {
@@ -106,7 +107,9 @@ public class FederatedCoordinator implements Runnable {
                 winnerAsk=cheapestAsk;
             }
         }
-        gr.setChartValues(bid.getTimeOfSubmission(), (double)System.currentTimeMillis()); //update the dataset that will be used to develop the graph
+       
+        Graph.setChartValues( (Math.floor((bid.getTimeOfSubmission()/6000)*100)/100), (double)(Math.floor(((System.currentTimeMillis()-Initialtime)/6000)*100)/100) ); //update the dataset that will be used to develop the graph
+     
         return winnerAsk;
     }
     
@@ -450,13 +453,21 @@ public class FederatedCoordinator implements Runnable {
         }
     }
     
+    
     public static void main(String[] args)
     {
-        gr=new Graph();
+        Initialtime=(double) System.currentTimeMillis();
         FederatedCoordinator.getInstance().start();
-        gr.GenerateGraph();
         AgentManager.getInstance().start();
         ServiceProviderManager.getInstance().start();
+        try {
+            //  Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            //  public void run() {
+            Thread.sleep(15000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Graph.GenerateGraph();
     }
     
     public synchronized void setPropertyAsInteger(String key, Integer value)
