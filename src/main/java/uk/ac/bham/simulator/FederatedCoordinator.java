@@ -7,6 +7,7 @@
 package uk.ac.bham.simulator;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -27,9 +28,11 @@ public class FederatedCoordinator implements Runnable {
     ArrayList<Bid> notifiedBidList=null;
     Map<Bid, AuctionAsk> waitingMap=null;
     boolean running=false;
+    Map<String, Integer> propertiesInteger=new HashMap<String, Integer>();
+    Map<String, ArrayList<MonitorRecord>> monitorMap=new HashMap<String, ArrayList<MonitorRecord>>();
     
     private static final FederatedCoordinator instance=new FederatedCoordinator();
-    
+    private Double commission;
     
     
     private final String SERVICE_PROVIDER_LOCK="SERVICE PROVIDER LOCK";
@@ -51,6 +54,7 @@ public class FederatedCoordinator implements Runnable {
         bidList=new ArrayList<Bid>();
         notifiedBidList=new ArrayList<Bid>();
         waitingMap=new java.util.HashMap<Bid, AuctionAsk>();
+        commission = 0.0;
     }
     
 
@@ -365,6 +369,7 @@ public class FederatedCoordinator implements Runnable {
     
     public void printWinnerAuctionAsk()
     {
+        System.out.println();
         System.out.println("Number of bids: "+this.bidList.size());
         System.out.println("Number of service providers: "+this.serviceProviderList.size());
         
@@ -387,17 +392,33 @@ public class FederatedCoordinator implements Runnable {
                     }
                     join.get(id)[0]=ir;
                 }
-                for(IdentityResource ir:ask.getIdentityResources())
+                
+                if(ask!=null)
                 {
-                    int id=ir.getResourceType().getId();
-                    if(!join.containsKey(id))
+                    for(IdentityResource ir:ask.getIdentityResources())
                     {
-                        join.put(id, new IdentityResource[]{null,null});
+                        int id=ir.getResourceType().getId();
+                        if(!join.containsKey(id))
+                        {
+                            join.put(id, new IdentityResource[]{null,null});
+                        }
+                        join.get(id)[1]=ir;
                     }
-                    join.get(id)[1]=ir;
                 }
                 
-                System.out.printf("%-30s %-30s%n", bid.hashCode()+"("+bid.getAdaptedPrice()+")", ask.hashCode()+"("+ask.getAdaptedPrice()+")");
+                String bidText="";
+                if(bid!=null)
+                {
+                    bidText=bid.hashCode()+"("+bid.getAdaptedPrice()+")";
+                }
+                
+                String askText="";
+                if(ask!=null)
+                {
+                    askText=ask.hashCode()+"("+ask.getAdaptedPrice()+")";
+                }
+                
+                System.out.printf("%-30s %-30s%n", bidText, askText);
                 
                 for (Map.Entry<Integer, IdentityResource[]> j:join.entrySet())
                 {
@@ -420,7 +441,7 @@ public class FederatedCoordinator implements Runnable {
                         pnameAsk=irAsk.getPriority().name();
                         priceAsk=irAsk.getPrice();
                     }
-                   System.out.printf("%-15s %-10s %5s %-10s %5s %n", rt.name(), pnameBid, priceBid, pnameAsk, priceAsk);
+                    System.out.printf("%-15s %-8s %5s %-8s %5s %n", rt.name(), pnameBid, priceBid, pnameAsk, priceAsk);
                     //System.out.printf("%-30s %-30s %n", bid.toString(), ask.toString());
                 }
                 System.out.println();
@@ -435,22 +456,88 @@ public class FederatedCoordinator implements Runnable {
         FederatedCoordinator.getInstance().start();
         AgentManager.getInstance().start();
         ServiceProviderManager.getInstance().start();
-        
-        try {
-            //  Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            //  public void run() {
-            Thread.sleep(15000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Graph.GenerateGraph();
-   //     }
- // }, "Shutdown-thread"));
-        
-}
-      
+    }
+    
+    public synchronized void setPropertyAsInteger(String key, Integer value)
+    {
+        propertiesInteger.put(key, value);
+    }
+    
+    public synchronized Integer getPropertyAsInteger(String key)
+    {
+        Integer tmp=propertiesInteger.get(key);
+        return tmp;
+    }
+    
+    public synchronized void initCounter(String counter)
+    {
+        this.setPropertyAsInteger(counter, 0);
+    }
+    
+    public synchronized int incrementCounter(String counter)
+    {
+        Integer otmp=this.getPropertyAsInteger(counter);
+        int tmp=0;
+        if(otmp!=null) tmp=otmp;
+        tmp++;
+        this.setPropertyAsInteger(counter, tmp);
+        return tmp;
+    }
+    
+    @Override
     public String toString()
     {
         return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
-    }    
+    }
+
+    /**
+     * @return the commission
+     */
+    public Double getCommission() {
+        return commission;
+    }
+
+    /**
+     * @param commission the commission to set
+     */
+    public void addCommission(Double commission) {
+        this.commission += commission;
+    }
+    
+    
+    class MonitorRecord 
+    {
+        Calendar timestamp;
+        double value;
+        
+        public MonitorRecord(long ts, double v)
+        {
+            timestamp=Calendar.getInstance();
+            timestamp.setTimeInMillis(ts);
+            value=v;
+        }
+        
+        public Calendar getTimestamp()
+        {
+            return timestamp;
+        }
+        
+        public double getValue()
+        {
+            return value;
+        }
+        
+    }
+    
+    public synchronized void recordValue(String monitor, double value)
+    {
+        ArrayList<MonitorRecord> list=this.monitorMap.get(monitor);
+        if(list==null)
+        {
+            this.monitorMap.put(monitor, new ArrayList<MonitorRecord>());
+            list=this.monitorMap.get(monitor);
+        }
+        MonitorRecord mr=new MonitorRecord(Calendar.getInstance().getTimeInMillis(), value);
+        list.add(mr);
+    }
 }
