@@ -3,7 +3,7 @@ package uk.ac.bham.simulator;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
-public class StatisticalAsk extends AuctionAsk {
+public class ModelledAsk extends AuctionAsk {
 
     private static int MINPRICE;
     private static final int FIRSTRESOURCETYPE = 1;//Availability(1), Anonymity(2),         
@@ -13,7 +13,7 @@ public class StatisticalAsk extends AuctionAsk {
     ArrayList<Integer> PreviousAsksForIntegrity = new ArrayList<Integer>();
     ArrayList<Integer> PreviousAsksForPerformance = new ArrayList<Integer>();
 
-    public StatisticalAsk(ServiceProvider serviceProvider) {
+    public ModelledAsk(ServiceProvider serviceProvider) {
         super(serviceProvider);
     }
 
