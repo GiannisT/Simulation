@@ -178,6 +178,9 @@ public class FederatedCoordinator implements Runnable {
                 {
                     ServiceProvider serviceProvider=winnerAsk.getServiceProvider();
                     identityProvider.notifyPayment(bid, serviceProvider);
+                    
+                    serviceProvider.addRevenue(Math.round(new Float(winnerAsk.getAdaptedPrice()*0.1)));
+                    this.addCommission(0.1);
                 }
             }
         }
@@ -369,6 +372,7 @@ public class FederatedCoordinator implements Runnable {
         System.out.println();
         System.out.println("Number of bids: "+this.bidList.size());
         System.out.println("Number of service providers: "+this.serviceProviderList.size());
+        System.out.println("Comission: "+this.commission);
         
         
         System.out.printf("%n%n%-30s %-30s %n", "Bid", "Auction Ask Winner");
