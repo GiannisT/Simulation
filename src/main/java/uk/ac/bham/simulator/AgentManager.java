@@ -132,6 +132,8 @@ public class AgentManager extends TimerTask {
             {
                 Bid bid=agent.createBid();
                 FederatedCoordinator.getInstance().publishBid(bid);
+                int tmp=FederatedCoordinator.getInstance().incrementCounter("bid");
+                FederatedCoordinator.getInstance().recordValue("bid", tmp);
                 Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {bid, agent, FederatedCoordinator.getInstance()});
             }
             counter--;
