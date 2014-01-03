@@ -26,6 +26,7 @@ public class FederatedCoordinator implements Runnable {
     ArrayList<Bid> notifiedBidList=null;
     Map<Bid, AuctionAsk> waitingMap=null;
     boolean running=false;
+    private Integer commission;
     
     private static final FederatedCoordinator instance=new FederatedCoordinator();
     
@@ -50,6 +51,7 @@ public class FederatedCoordinator implements Runnable {
         bidList=new ArrayList<Bid>();
         notifiedBidList=new ArrayList<Bid>();
         waitingMap=new java.util.HashMap<Bid, AuctionAsk>();
+        commission = 0;
     }
     
 
@@ -439,4 +441,18 @@ public class FederatedCoordinator implements Runnable {
     {
         return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
     }    
+
+    /**
+     * @return the commission
+     */
+    public Integer getCommission() {
+        return commission;
+    }
+
+    /**
+     * @param commission the commission to set
+     */
+    public void addCommission(Integer commission) {
+        this.commission += commission;
+    }
 }

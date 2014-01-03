@@ -18,10 +18,11 @@ public class ServiceProvider
     
     StringBuffer publicK, privateK;
     ArrayList<AuctionAsk> auctionAsks;
-    
+    private Integer revenue;
     public ServiceProvider()
     {
-        auctionAsks = new ArrayList<AuctionAsk>();        
+        auctionAsks = new ArrayList<AuctionAsk>();  
+        revenue = 0;
     }
     
     public AuctionAsk createAuctionAsk()
@@ -161,6 +162,22 @@ public class ServiceProvider
     public String toString()
     {
         return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
+    }
+
+    /**
+     * @return the revenue
+     */
+    public Integer getRevenue() 
+    {
+        return revenue;
+    }
+
+    /**
+     * @param revenue the revenue to set
+     */
+    public void addRevenue(Integer revenue) 
+    {
+        this.revenue += revenue;
     }
 
 }
