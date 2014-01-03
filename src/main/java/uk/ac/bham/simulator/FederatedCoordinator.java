@@ -27,7 +27,6 @@ public class FederatedCoordinator implements Runnable {
     ArrayList<Bid> notifiedBidList=null;
     Map<Bid, AuctionAsk> waitingMap=null;
     boolean running=false;
-    private Integer commission;
     Map<String, Integer> propertiesInteger=new HashMap<String, Integer>();
     Map<String, ArrayList<MonitorRecord>> monitorMap=new HashMap<String, ArrayList<MonitorRecord>>();
     
@@ -486,21 +485,6 @@ public class FederatedCoordinator implements Runnable {
     public String toString()
     {
         return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
-
-    }    
-
-    /**
-     * @return the commission
-     */
-    public Integer getCommission() {
-        return commission;
-    }
-
-    /**
-     * @param commission the commission to set
-     */
-    public void addCommission(Integer commission) {
-        this.commission += commission;
     }
     
     
@@ -538,44 +522,5 @@ public class FederatedCoordinator implements Runnable {
         }
         MonitorRecord mr=new MonitorRecord(Calendar.getInstance().getTimeInMillis(), value);
         list.add(mr);
-
-    }
-    
-    
-    class MonitorRecord 
-    {
-        Calendar timestamp;
-        double value;
-        
-        public MonitorRecord(long ts, double v)
-        {
-            timestamp=Calendar.getInstance();
-            timestamp.setTimeInMillis(ts);
-            value=v;
-        }
-        
-        public Calendar getTimestamp()
-        {
-            return timestamp;
-        }
-        
-        public double getValue()
-        {
-            return value;
-        }
-        
-    }
-    
-    public synchronized void recordValue(String monitor, double value)
-    {
-        ArrayList<MonitorRecord> list=this.monitorMap.get(monitor);
-        if(list==null)
-        {
-            this.monitorMap.put(monitor, new ArrayList<MonitorRecord>());
-            list=this.monitorMap.get(monitor);
-        }
-        MonitorRecord mr=new MonitorRecord(Calendar.getInstance().getTimeInMillis(), value);
-        list.add(mr);
-
     }
 }
