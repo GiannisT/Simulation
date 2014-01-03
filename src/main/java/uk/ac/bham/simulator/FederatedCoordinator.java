@@ -31,7 +31,7 @@ public class FederatedCoordinator implements Runnable {
     Map<String, ArrayList<MonitorRecord>> monitorMap=new HashMap<String, ArrayList<MonitorRecord>>();
     
     private static final FederatedCoordinator instance=new FederatedCoordinator();
-    
+    private Double commission;
     
     
     private final String SERVICE_PROVIDER_LOCK="SERVICE PROVIDER LOCK";
@@ -53,7 +53,7 @@ public class FederatedCoordinator implements Runnable {
         bidList=new ArrayList<Bid>();
         notifiedBidList=new ArrayList<Bid>();
         waitingMap=new java.util.HashMap<Bid, AuctionAsk>();
-        commission = 0;
+        commission = 0.0;
     }
     
 
@@ -485,6 +485,20 @@ public class FederatedCoordinator implements Runnable {
     public String toString()
     {
         return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
+    }
+
+    /**
+     * @return the commission
+     */
+    public Double getCommission() {
+        return commission;
+    }
+
+    /**
+     * @param commission the commission to set
+     */
+    public void addCommission(Double commission) {
+        this.commission += commission;
     }
     
     
