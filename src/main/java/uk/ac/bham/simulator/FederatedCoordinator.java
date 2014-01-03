@@ -18,6 +18,7 @@ import org.jfree.chart.demo.Graph;
  * @author Francisco Ramirez
  */
 public class FederatedCoordinator implements Runnable {
+    static Double Initialtime;
     ArrayList<ServiceProvider> serviceProviderList=null;
     ArrayList<IdentityProvider> identityProviderList=null;
     ArrayList<AuctionAsk> auctionAskList=null;
@@ -39,7 +40,7 @@ public class FederatedCoordinator implements Runnable {
     private final String NOTIFIED_BID_LOCK="NOTIFIED BID LOCK";
     private final String RUNNING_LOCK="RUNNING LOCK";
     private final String WAITING_MAP_LOCK="WAITING MAP LOCK";
-    static Graph gr;
+    
     
     private FederatedCoordinator()
     {
@@ -102,7 +103,9 @@ public class FederatedCoordinator implements Runnable {
                 winnerAsk=cheapestAsk;
             }
         }
-        gr.setChartValues(bid.getTimeOfSubmission(), (double)System.currentTimeMillis()); //update the dataset that will be used to develop the graph
+       
+        Graph.setChartValues( (Math.floor((bid.getTimeOfSubmission()/6000)*100)/100), (double)(Math.floor(((System.currentTimeMillis()-Initialtime)/6000)*100)/100) ); //update the dataset that will be used to develop the graph
+     
         return winnerAsk;
     }
     
@@ -417,7 +420,7 @@ public class FederatedCoordinator implements Runnable {
                         pnameAsk=irAsk.getPriority().name();
                         priceAsk=irAsk.getPrice();
                     }
-                    System.out.printf("%-15s %-10s %5s %-10s %5s %n", rt.name(), pnameBid, priceBid, pnameAsk, priceAsk);
+                   System.out.printf("%-15s %-10s %5s %-10s %5s %n", rt.name(), pnameBid, priceBid, pnameAsk, priceAsk);
                     //System.out.printf("%-30s %-30s %n", bid.toString(), ask.toString());
                 }
                 System.out.println();
@@ -425,16 +428,27 @@ public class FederatedCoordinator implements Runnable {
         }
     }
     
+    
     public static void main(String[] args)
     {
-        gr=new Graph();
+        Initialtime=(double) System.currentTimeMillis();
         FederatedCoordinator.getInstance().start();
-        gr.GenerateGraph();
         AgentManager.getInstance().start();
         ServiceProviderManager.getInstance().start();
-    }
-    
-    @Override
+        
+        try {
+            //  Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            //  public void run() {
+            Thread.sleep(15000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Graph.GenerateGraph();
+   //     }
+ // }, "Shutdown-thread"));
+        
+}
+      
     public String toString()
     {
         return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
