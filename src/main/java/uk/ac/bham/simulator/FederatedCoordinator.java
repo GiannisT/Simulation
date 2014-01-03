@@ -456,6 +456,14 @@ public class FederatedCoordinator implements Runnable {
         FederatedCoordinator.getInstance().start();
         AgentManager.getInstance().start();
         ServiceProviderManager.getInstance().start();
+        try {
+            //  Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            //  public void run() {
+            Thread.sleep(15000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Graph.GenerateGraph();
     }
     
     public synchronized void setPropertyAsInteger(String key, Integer value)
