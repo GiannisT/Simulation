@@ -27,12 +27,9 @@ public class FederatedCoordinator implements Runnable {
     ArrayList<Bid> notifiedBidList=null;
     Map<Bid, AuctionAsk> waitingMap=null;
     boolean running=false;
-<<<<<<< HEAD
     private Integer commission;
-=======
     Map<String, Integer> propertiesInteger=new HashMap<String, Integer>();
     Map<String, ArrayList<MonitorRecord>> monitorMap=new HashMap<String, ArrayList<MonitorRecord>>();
->>>>>>> branch 'master' of ssh://git.soravi.com:9022/home/itconsultore/giannis/simulator.git/
     
     private static final FederatedCoordinator instance=new FederatedCoordinator();
     
@@ -489,7 +486,7 @@ public class FederatedCoordinator implements Runnable {
     public String toString()
     {
         return ""+this.getClass().getSimpleName()+"@"+this.hashCode();
-<<<<<<< HEAD
+
     }    
 
     /**
@@ -504,7 +501,6 @@ public class FederatedCoordinator implements Runnable {
      */
     public void addCommission(Integer commission) {
         this.commission += commission;
-=======
     }
     
     
@@ -542,6 +538,44 @@ public class FederatedCoordinator implements Runnable {
         }
         MonitorRecord mr=new MonitorRecord(Calendar.getInstance().getTimeInMillis(), value);
         list.add(mr);
->>>>>>> branch 'master' of ssh://git.soravi.com:9022/home/itconsultore/giannis/simulator.git/
+
+    }
+    
+    
+    class MonitorRecord 
+    {
+        Calendar timestamp;
+        double value;
+        
+        public MonitorRecord(long ts, double v)
+        {
+            timestamp=Calendar.getInstance();
+            timestamp.setTimeInMillis(ts);
+            value=v;
+        }
+        
+        public Calendar getTimestamp()
+        {
+            return timestamp;
+        }
+        
+        public double getValue()
+        {
+            return value;
+        }
+        
+    }
+    
+    public synchronized void recordValue(String monitor, double value)
+    {
+        ArrayList<MonitorRecord> list=this.monitorMap.get(monitor);
+        if(list==null)
+        {
+            this.monitorMap.put(monitor, new ArrayList<MonitorRecord>());
+            list=this.monitorMap.get(monitor);
+        }
+        MonitorRecord mr=new MonitorRecord(Calendar.getInstance().getTimeInMillis(), value);
+        list.add(mr);
+
     }
 }
