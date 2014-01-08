@@ -419,7 +419,8 @@ public class FederatedCoordinator implements Runnable {
                 String askText="";
                 if(ask!=null)
                 {
-                    askText=ask.hashCode()+"("+ask.getAdaptedPrice()+")";
+                    int revenue=ask.getServiceProvider().getRevenue();
+                    askText=ask.hashCode()+"("+ask.getAdaptedPrice()+" with revenue="+revenue+")";
                 }
                 
                 System.out.printf("%-30s %-30s%n", bidText, askText);
@@ -460,13 +461,14 @@ public class FederatedCoordinator implements Runnable {
         FederatedCoordinator.getInstance().start();
         AgentManager.getInstance().start();
         ServiceProviderManager.getInstance().start();
+            //Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+              //public void run() {
         try {
-            //  Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            //  public void run() {
             Thread.sleep(15000);
         } catch (InterruptedException ex) {
             Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
         }
+              //}}));
         Graph.GenerateGraph();
     }
     
