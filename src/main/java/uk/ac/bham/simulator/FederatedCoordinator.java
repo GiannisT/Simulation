@@ -507,14 +507,16 @@ public class FederatedCoordinator implements Runnable {
     /**
      * @return the commission
      */
-    public Double getCommission() {
+    public Double getCommission() 
+    {
         return commission;
     }
 
     /**
      * @param commission the commission to set
      */
-    public void addCommission(Double commission) {
+    public void addCommission(Double commission) 
+    {
         this.commission += commission;
     }
     
