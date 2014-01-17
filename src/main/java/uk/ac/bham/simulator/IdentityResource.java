@@ -98,6 +98,29 @@ public class IdentityResource
         this.price = price;
     }    
     
+    public float calculateCurrentPrice(Integer willingToPayPrice)
+    {        
+        float sellingPrice = -1;
+        float currentPrice = getCost()*(1+getPreferredProfit()/100);        
+        if(currentPrice > willingToPayPrice)
+        {
+            currentPrice = getCost()*(1+getMinimumProfit()/100);
+            if(currentPrice <= willingToPayPrice)
+            {
+                int maximumProfit = getPreferredProfit();
+                do
+                {                   
+                    currentPrice = getCost()*(1+Utilities.generateRandomInteger(getMinimumProfit(), --maximumProfit)/100);
+                } while(currentPrice>willingToPayPrice); 
+                sellingPrice = currentPrice;
+            }            
+        }
+        else
+        {
+            sellingPrice = currentPrice;
+        }
+        return sellingPrice;
+    }
      /**
      * @return the resourceType
      */

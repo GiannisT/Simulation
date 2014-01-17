@@ -23,7 +23,7 @@ public class RandomAsk extends AuctionAsk
         {
             IdentityResource identityResource = new IdentityResource();
             identityResource.setPrice(Utilities.generateRandomInteger(MINPRICE, MAXPRICE));
-            identityResource.setPriority(IdentityResource.Priority.createByNumber(Utilities.generateRandomInteger(MINPRIORITY,MAXPRIORITY)));
+            identityResource.setPriority(IdentityResource.Priority.Low);//.createByNumber(Utilities.generateRandomInteger(MINPRIORITY,MAXPRIORITY))
             identityResource.setResourceType(IdentityResource.ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
             getIdentityResources().add(identityResource);
         }       
