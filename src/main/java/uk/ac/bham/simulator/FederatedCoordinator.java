@@ -386,10 +386,10 @@ public class FederatedCoordinator implements Runnable {
         System.out.println();
         System.out.println("Number of bids: "+this.bidList.size());
         System.out.println("Number of service providers: "+this.serviceProviderList.size());
-        System.out.println("Federated Commission: "+this.commission);
+        System.out.println("Federated Commission: Initial="+this.commission + " Additional=");
         
         
-        System.out.printf("%n%n%-30s %-30s %n", "Bid", "Auction Ask Winner");
+        System.out.printf("%n%n%-30s %-30s %n", "Initial Bid", "Auction Ask Winner", "Modified Bid");
         synchronized (WAITING_MAP_LOCK)
         {
             for (Map.Entry<Bid, AuctionAsk> entry: this.waitingMap.entrySet())
@@ -424,14 +424,14 @@ public class FederatedCoordinator implements Runnable {
                 String bidText="";
                 if(bid!=null)
                 {
-                    bidText=bid.hashCode()+"("+bid.getAdaptedPrice()+")";
+                    bidText=bid.hashCode()+"(Adapted Price="+bid.getAdaptedPrice()+")";
                 }
                 
                 String askText="";
                 if(ask!=null)
                 {
                     int revenue=ask.getServiceProvider().getRevenue();
-                    askText=ask.hashCode()+"("+ask.getAdaptedPrice()+" with revenue="+revenue+")";
+                    askText=ask.hashCode()+"(Winner Price="+ask.getAdaptedPrice()+", Revenue="+revenue+", Profit=)";
                 }
                 
                 System.out.printf("%-30s %-30s%n", bidText, askText);
