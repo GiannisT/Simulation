@@ -11,7 +11,10 @@ public class IdentityResource
     private Long Duration;
     private ResourceType resourceType;
     private Priority priority;   
-    
+    private Integer cost;
+    private Integer minimumProfit;
+    private Integer preferredProfit;
+
     
     public enum ResourceType 
     {
@@ -48,18 +51,18 @@ public class IdentityResource
     }
        
     public enum Priority 
-    { 
-        Low(1), 
-        Medium(2),
-        High(3);
-        private int level;        
+    {         
+        Low(0.9f), 
+        Medium(1f),
+        High(1.1f);
+        private float level;        
         
-        Priority(int level) 
+        Priority(float level) 
         {
             this.level = level;
         }
         
-        public static Priority createByNumber(int id)
+        public static Priority createByNumber(float id)
         {            
             Priority instance = null;
             for (Priority p : Priority.values())
@@ -72,7 +75,8 @@ public class IdentityResource
             }
             return instance;
         }
-        public int getLevel() 
+        
+        public float getLevel() 
         { 
             return level;
         }
@@ -97,46 +101,101 @@ public class IdentityResource
      /**
      * @return the resourceType
      */
-    public ResourceType getResourceType() {
+    public ResourceType getResourceType() 
+    {
         return resourceType;
     }
 
     /**
      * @param resourceType the resourceType to set
      */
-    public void setResourceType(ResourceType resourceType) {
+    public void setResourceType(ResourceType resourceType) 
+    {
         this.resourceType = resourceType;
     }
 
     /**
      * @return the priority
      */
-    public Priority getPriority() {
+    public Priority getPriority() 
+    {
         return priority;
     }
 
     /**
      * @param priority the priority to set
      */
-    public void setPriority(Priority priority) {
+    public void setPriority(Priority priority) 
+    {
         this.priority = priority;
     }
     
-    public void setDurationOfAuction (long time){
+    public void setDurationOfAuction (long time)
+    {
         this.Duration=time;
     }
     
-    public long getDurationOfAuction(){
+    public long getDurationOfAuction()
+    {
         return Duration;
     }
     
-    public void setMaxPrice(int MaxPrice){
+    public void setMaxPrice(int MaxPrice)
+    {
         this.MaxPrice=MaxPrice;
     }
     
-    public int getMaxPrice(){
+    public int getMaxPrice()
+    {
         return MaxPrice;
     }
     
-  
+/**
+     * @return the cost
+     */
+    public Integer getCost() 
+    {
+        return cost;
+    }
+
+    /**
+     * @param cost the cost to set
+     */
+    public void setCost(Integer cost) 
+    {
+        this.cost = cost;
+    }
+
+    /**
+     * @return the minimumProfit
+     */
+    public Integer getMinimumProfit() 
+    {
+        return minimumProfit;
+    }
+
+    /**
+     * @param minimumProfit the minimumProfit to set
+     */
+    public void setMinimumProfit(Integer minimumProfit) 
+    {
+        this.minimumProfit = minimumProfit;
+    }
+
+    /**
+     * @return the preferredProfit
+     */
+    public Integer getPreferredProfit() 
+    {
+        return preferredProfit;
+    }
+
+    /**
+     * @param preferredProfit the preferredProfit to set
+     */
+    public void setPreferredProfit(Integer preferredProfit) 
+    {
+        this.preferredProfit = preferredProfit;
+    }
+      
 }
