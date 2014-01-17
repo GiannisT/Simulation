@@ -31,6 +31,9 @@ public class RandomBid extends Bid
         {
             IdentityResource identityResource = new IdentityResource();
             identityResource.setPrice(Utilities.generateRandomInteger(MINPRICE, MAXPRICE));
+            identityResource.setCost(100);
+            identityResource.setMinimumProfit(Utilities.generateRandomInteger(40, 50));
+            identityResource.setPreferredProfit(Utilities.generateRandomInteger(50, 100));
             identityResource.setPriority(Priority.Low);// .createByNumber(Utilities.generateRandomInteger(MINPRIORITY,MAXPRIORITY))
             identityResource.setResourceType(ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
             setTimeOfSubmission(System.currentTimeMillis()); //used for creating the points in the graph
