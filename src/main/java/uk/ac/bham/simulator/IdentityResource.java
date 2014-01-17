@@ -107,9 +107,10 @@ public class IdentityResource
             currentPrice = getCost()*(1+getMinimumProfit()/100);
             if(currentPrice <= willingToPayPrice)
             {
+                int maximumProfit = getPreferredProfit();
                 do
-                {
-                    currentPrice = getCost()*(1+Utilities.generateRandomInteger(getMinimumProfit(), getPreferredProfit()-1)/100);   ;
+                {                   
+                    currentPrice = getCost()*(1+Utilities.generateRandomInteger(getMinimumProfit(), --maximumProfit)/100);
                 } while(currentPrice>willingToPayPrice); 
                 sellingPrice = currentPrice;
             }            
