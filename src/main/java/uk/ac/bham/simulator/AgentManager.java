@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class AgentManager extends TimerTask {
     
-    private static final AgentManager instance=new AgentManager();
+    private static AgentManager instance=new AgentManager();
     
     private boolean running;
     
@@ -26,17 +26,40 @@ public class AgentManager extends TimerTask {
     private int counter;
     private Timer timer;
     
+    private boolean isRandom;
+    
     private AgentManager()
     {
         synchronized (RUNNING_LOCK)
         {
             this.running=false;
+            this.isRandom=true;
         }
+    }
+    
+    public static void clear()
+    {
+        AgentManager.instance=new AgentManager();
     }
     
     public static AgentManager getInstance()
     {
         return AgentManager.instance;
+    }
+    
+    public void setRandom()
+    {
+        this.isRandom=true;
+    }
+    
+    public void setModelled()
+    {
+        this.isRandom=false;
+    }
+    
+    public boolean isRandom()
+    {
+        return this.isRandom;
     }
     
     
@@ -96,7 +119,7 @@ public class AgentManager extends TimerTask {
             FederatedCoordinator.getInstance().addSession(agent);
             Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was created and added to {1}", new Object[] {agent, FederatedCoordinator.getInstance()});
             
-            RandomBidCreator creator=new RandomBidCreator(agent, 2);
+            BidCreator creator=new BidCreator(agent, 2, true);
             creator.start();
         }
         counter--;
@@ -107,17 +130,19 @@ public class AgentManager extends TimerTask {
         }
     }
     
-    class RandomBidCreator extends TimerTask
+    class BidCreator extends TimerTask
     {
         Agent agent;
         Timer timer;
         int counter=0;
+        boolean isRandom=true;
 
-        public RandomBidCreator(Agent a, int c)
+        public BidCreator(Agent a, int c, boolean isRandom)
         {
             this.agent=a;
             this.timer=new Timer("Bid Creator", true);
             this.counter=c;
+            this.isRandom=isRandom;
         }
 
         public void start()
@@ -130,7 +155,7 @@ public class AgentManager extends TimerTask {
         {
             if(counter>0)
             {
-                Bid bid=agent.createBid();
+                Bid bid=agent.createBid(this.isRandom);
                 FederatedCoordinator.getInstance().publishBid(bid);
                 int tmp=FederatedCoordinator.getInstance().incrementCounter("bid");
                 FederatedCoordinator.getInstance().recordValue("bid", tmp);
@@ -143,4 +168,5 @@ public class AgentManager extends TimerTask {
             }
         }
     }
+    
 }

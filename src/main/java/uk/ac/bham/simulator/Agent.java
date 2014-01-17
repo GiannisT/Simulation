@@ -17,10 +17,17 @@ public class Agent
         this.identityProvider = identityProvider;
     }
     
-    public Bid createBid()
+    public Bid createBid(boolean random)
     {//ADD AN IF STATEMENT CHOSSING BETWEEN RANDOM AND STATISTICAL HERE
-        
-        Bid bid = new RandomBid(this);
+        Bid bid;
+        if(random)
+        {
+            bid = new RandomBid(this);
+        }
+        else
+        {
+            bid = new ModelledBid(this);
+        }
         bid.configIdentityResources(); 
         bid.setMaxIncrementPercentage(Utilities.generateRandomInteger(1, 30));
         bids.add(bid);  

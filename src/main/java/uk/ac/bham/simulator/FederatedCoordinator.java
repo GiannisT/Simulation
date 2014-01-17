@@ -57,6 +57,17 @@ public class FederatedCoordinator implements Runnable {
         commission = 0.0;
     }
     
+    public void clear()
+    {
+        serviceProviderList.clear();
+        identityProviderList.clear();
+        auctionAskList.clear();
+        agentList.clear();
+        bidList.clear();
+        notifiedBidList.clear();
+        waitingMap.clear();
+        commission= 0.0;
+    }
 
     
     public static FederatedCoordinator getInstance()
@@ -375,7 +386,7 @@ public class FederatedCoordinator implements Runnable {
         System.out.println();
         System.out.println("Number of bids: "+this.bidList.size());
         System.out.println("Number of service providers: "+this.serviceProviderList.size());
-        System.out.println("Comission: "+this.commission);
+        System.out.println("Federated Commission: "+this.commission);
         
         
         System.out.printf("%n%n%-30s %-30s %n", "Bid", "Auction Ask Winner");
@@ -459,16 +470,46 @@ public class FederatedCoordinator implements Runnable {
     {
         Initialtime=(double) System.currentTimeMillis();
         FederatedCoordinator.getInstance().start();
+        
+        AgentManager.getInstance().setRandom();
+        ServiceProviderManager.getInstance().setRandom();                
         AgentManager.getInstance().start();
         ServiceProviderManager.getInstance().start();
             //Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
               //public void run() {
+        
+        boolean working=true;
+        while (working)
+        {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(!FederatedCoordinator.getInstance().isRunning() && !AgentManager.getInstance().isRunning() && !ServiceProviderManager.getInstance().isRunning())
+            {
+                working=false;
+            }
+        }
+              //}}));
+        
+        System.out.println();
+        System.out.println("*** Ready for new task ***");
+        FederatedCoordinator.getInstance().clear();
+        AgentManager.clear();
+        ServiceProviderManager.clear();
+        
+        FederatedCoordinator.getInstance().start();
+        AgentManager.getInstance().setModelled();
+        ServiceProviderManager.getInstance().setModelled();
+        AgentManager.getInstance().start();
+        ServiceProviderManager.getInstance().start();
+
         try {
             Thread.sleep(15000);
         } catch (InterruptedException ex) {
             Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
         }
-              //}}));
         Graph.GenerateGraph();
     }
     

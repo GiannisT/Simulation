@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class ServiceProviderManager extends TimerTask {
         
-    private static final ServiceProviderManager instance=new ServiceProviderManager();
+    private static ServiceProviderManager instance=new ServiceProviderManager();
     
     private boolean running;
     
@@ -26,6 +26,8 @@ public class ServiceProviderManager extends TimerTask {
     private int counter;
     private Timer timer;
     
+    private boolean isRandom;
+    
     private ServiceProviderManager()
     {
         synchronized (RUNNING_LOCK)
@@ -33,10 +35,30 @@ public class ServiceProviderManager extends TimerTask {
             this.running=false;
         }
     }
+
+    public static void clear()
+    {
+        ServiceProviderManager.instance=new ServiceProviderManager();
+    }
     
     public static ServiceProviderManager getInstance()
     {
         return ServiceProviderManager.instance;
+    }
+    
+    public void setRandom()
+    {
+        this.isRandom=true;
+    }
+    
+    public void setModelled()
+    {
+        this.isRandom=false;
+    }
+    
+    public boolean isRandom()
+    {
+        return this.isRandom;
     }
     
     
@@ -94,7 +116,7 @@ public class ServiceProviderManager extends TimerTask {
             FederatedCoordinator.getInstance().registerServiceProvider(serviceProvider);
             Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new {0} was created and added to {1}", new Object[] {serviceProvider, FederatedCoordinator.getInstance()});
 
-            RandomAskCreator creator=new RandomAskCreator(serviceProvider, 2);
+            AskCreator creator=new AskCreator(serviceProvider, 2, isRandom);
             creator.start();
         }
         counter--;
@@ -105,17 +127,20 @@ public class ServiceProviderManager extends TimerTask {
         }
     }
     
-    class RandomAskCreator extends TimerTask
+    class AskCreator extends TimerTask
     {
         ServiceProvider serviceProvider;
         Timer timer;
         int counter=0;
         
-        public RandomAskCreator(ServiceProvider sp, int c)
+        boolean isRandom;
+        
+        public AskCreator(ServiceProvider sp, int c, boolean isRandom)
         {
             this.serviceProvider=sp;
             this.timer=new Timer("AuctionAsk Creator", true);
             this.counter=c;
+            this.isRandom=isRandom;
         }
         
         public void start()
@@ -128,7 +153,15 @@ public class ServiceProviderManager extends TimerTask {
         {
             if(counter>0)
             {
-                AuctionAsk ask=new RandomAsk(serviceProvider); //serviceProvider.createBid(null);
+                AuctionAsk ask;
+                if(isRandom)
+                {
+                    ask=new RandomAsk(serviceProvider); //serviceProvider.createBid(null);
+                }
+                else
+                {
+                    ask=new ModelledAsk(serviceProvider);
+                }
                 ask.configIdentityResources();
                 
                 FederatedCoordinator.getInstance().publishAuctionAsk(ask);
