@@ -48,18 +48,18 @@ public class IdentityResource
     }
        
     public enum Priority 
-    { 
-        Low(1), 
-        Medium(2),
-        High(3);
-        private int level;        
+    {         
+        Low(0.9f), 
+        Medium(1f),
+        High(1.1f);
+        private float level;        
         
-        Priority(int level) 
+        Priority(float level) 
         {
             this.level = level;
         }
         
-        public static Priority createByNumber(int id)
+        public static Priority createByNumber(float id)
         {            
             Priority instance = null;
             for (Priority p : Priority.values())
@@ -72,7 +72,8 @@ public class IdentityResource
             }
             return instance;
         }
-        public int getLevel() 
+        
+        public float getLevel() 
         { 
             return level;
         }
