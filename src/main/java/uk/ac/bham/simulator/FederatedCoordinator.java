@@ -447,8 +447,8 @@ public class FederatedCoordinator implements Runnable {
                     }
                 }
                 
-                String[] bidTextInitial=new String[4];
-                String[] bidTextModified=new String[4];
+                String[] bidTextInitial=new String[] {"", "", "", ""};
+                String[] bidTextModified=new String[] {"", "", "", ""};
                 if(bidInitial!=null)
                 {
                     bidTextInitial[0]=""+bidInitial.hashCode();
@@ -464,7 +464,7 @@ public class FederatedCoordinator implements Runnable {
                     bidTextModified[3]="";
                 }
                 
-                String[] askText=new String[4];
+                String[] askText=new String[] {"", "", "", ""};
                 if(ask!=null)
                 {
                     int revenue=ask.getServiceProvider().getRevenue();

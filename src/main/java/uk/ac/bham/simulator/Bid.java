@@ -153,10 +153,16 @@ public class Bid
             if (ir.getResourceType().equals(resourceType))
             {
                 Float currentPrice=ir.calculateCurrentPrice(this.getPreferredPrice());
+                IdentityResource.Priority oldPriority=ir.getPriority();
                 ir.setPriority(priority);
                 Float newPrice=ir.calculateCurrentPrice(this.getPreferredPrice());
                 Float delta=(newPrice-currentPrice);
                 this.setPreferredPrice(this.getPreferredPrice()+delta);
+                
+                System.out.println(this.original+"was modified\n"+
+                        " resource="+resourceType.name()+" from "+oldPriority.name()+ " to "+priority.name()+
+                        " old price="+currentPrice+", new price="+newPrice+
+                        "\n"+this);
             }
         }
     }

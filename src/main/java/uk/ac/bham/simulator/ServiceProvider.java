@@ -149,7 +149,18 @@ public class ServiceProvider
                 case 3: priorityValue=1.1f; break;
             }
             IdentityResource.Priority p=IdentityResource.Priority.createByNumber(priorityValue);
-            bid.modifiedBy(rt, p);
+            boolean modified=false;
+            for(IdentityResource ir:bid.getIdentityResources())
+            {
+                if(ir.getResourceType().getId()==rt.getId())
+                {
+                    if(p.getLevel()>ir.getPriority().getLevel()) modified=true;
+                }
+            }
+            if(modified)
+            {
+                bid.modifiedBy(rt, p);
+            }
         }
         
         bid.getAgent().getIdentityProvider().requestPayment(price, bid);        
