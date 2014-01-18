@@ -27,6 +27,7 @@ public class RandomBid extends Bid
     {        
         int resourceTypeId = FIRSTRESOURCETYPE;
          
+        this.setPreferredPrice(Utilities.generateRandomInteger(400, 700));
         while (resourceTypeId <= LASTRESOURCETYPE)        
         {
             IdentityResource identityResource = new IdentityResource();
@@ -38,7 +39,7 @@ public class RandomBid extends Bid
             identityResource.setResourceType(ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
             setTimeOfSubmission(System.currentTimeMillis()); //used for creating the points in the graph
             getIdentityResources().add(identityResource);
-        }       
+        }
     }
     
 }

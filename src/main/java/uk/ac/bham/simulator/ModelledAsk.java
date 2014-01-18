@@ -54,7 +54,7 @@ public class ModelledAsk extends AuctionAsk {
 
                 identityResource.setPrice(MINPRICE);
                 identityResource.setResourceType(IdentityResource.ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
-                identityResource.setDurationOfAuction(Utilities.generateRandomInteger(40000, 100000));
+                identityResource.setDurationOfAuction(new Long(Utilities.generateRandomInteger(40000, 100000)));
                 getIdentityResources().add(identityResource);
                 
        }else{
@@ -73,7 +73,7 @@ public class ModelledAsk extends AuctionAsk {
             
              identityResource.setPrice(Price);
              identityResource.setResourceType(IdentityResource.ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
-             identityResource.setDurationOfAuction(Utilities.generateRandomInteger(100000, 200000));
+             identityResource.setDurationOfAuction(new Long(Utilities.generateRandomInteger(100000, 200000)));
              getIdentityResources().add(identityResource);
        }
      }

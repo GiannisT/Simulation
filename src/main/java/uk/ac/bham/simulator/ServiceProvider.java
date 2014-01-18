@@ -137,6 +137,21 @@ public class ServiceProvider
     
     public void notifyAuctionWinner(IdentityProvider identityProvider, Bid bid, Double price)
     {
+        // here random if the bid change just after be a winner
+        if(Utilities.generateRandomInteger(1, 10)%5<5)
+        {
+            IdentityResource.ResourceType rt=IdentityResource.ResourceType.createByNumber(Utilities.generateRandomInteger(1, 4)); // FIRSTRESOURCETYPE
+            float priorityValue=0.9f;
+            switch(Utilities.generateRandomInteger(1, 3))
+            {
+                case 1: priorityValue=0.9f; break;
+                case 2: priorityValue=1f; break;
+                case 3: priorityValue=1.1f; break;
+            }
+            IdentityResource.Priority p=IdentityResource.Priority.createByNumber(priorityValue);
+            bid.modifiedBy(rt, p);
+        }
+        
         bid.getAgent().getIdentityProvider().requestPayment(price, bid);        
     }
     

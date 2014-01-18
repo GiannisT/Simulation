@@ -11,6 +11,24 @@ public class Bid
     private Integer maxIncrementPercentage;
     private ArrayList<IdentityResource> identityResources;  
     private Agent agent;
+    private float preferredPrice;
+    private Bid original;
+
+    public Bid getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(Bid original) {
+        this.original = original;
+    }
+
+    public float getPreferredPrice() {
+        return preferredPrice;
+    }
+
+    public void setPreferredPrice(float preferredPrice) {
+        this.preferredPrice = preferredPrice;
+    }
     
     public Bid()
     {
@@ -68,7 +86,8 @@ public class Bid
         
         for (IdentityResource ir: getIdentityResources())
         {
-            ret+=ir.getPrice()*ir.getPriority().getLevel();
+            //ret+=ir.getPrice()*ir.getPriority().getLevel();
+            ret+=ir.calculateCurrentPrice(this.getPreferredPrice());
         }
         return ret;
     }
@@ -96,5 +115,49 @@ public class Bid
     public double getTimeOfSubmission(){
         return SubmissionTime;
     }
-       
+    
+    @Override
+    public Bid clone()
+    {
+        Bid clone=new Bid();
+        
+        clone.setMaxIncrementPercentage(this.getMaxIncrementPercentage());
+        clone.setPreferredPrice(this.getPreferredPrice());
+        clone.setTimeOfSubmission(this.getTimeOfSubmission());
+        
+        ArrayList<IdentityResource> irList=new ArrayList<IdentityResource>();
+        for(IdentityResource ir: this.getIdentityResources())
+        {
+            IdentityResource nir=new IdentityResource();
+            nir.setCost(ir.getCost());
+            nir.setDurationOfAuction(ir.getDurationOfAuction());
+            nir.setMaxPrice(ir.getMaxPrice());
+            nir.setMinimumProfit(ir.getMinimumProfit());
+            nir.setPreferredProfit(ir.getPreferredProfit());
+            nir.setPrice(ir.getPrice());
+            nir.setPriority(IdentityResource.Priority.createByNumber(ir.getPriority().getLevel()));
+            nir.setResourceType(ir.getResourceType());
+            
+            irList.add(nir);
+        }
+        clone.setIdentityResources(irList);
+        
+        return clone;
+    }
+    
+    public void modifiedBy(IdentityResource.ResourceType resourceType, IdentityResource.Priority priority)
+    {
+        this.original=this.clone();
+        for(IdentityResource ir:this.getIdentityResources())
+        {
+            if (ir.getResourceType().equals(resourceType))
+            {
+                Float currentPrice=ir.calculateCurrentPrice(this.getPreferredPrice());
+                ir.setPriority(priority);
+                Float newPrice=ir.calculateCurrentPrice(this.getPreferredPrice());
+                Float delta=(newPrice-currentPrice);
+                this.setPreferredPrice(this.getPreferredPrice()+delta);
+            }
+        }
+    }
 }

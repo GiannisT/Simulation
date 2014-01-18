@@ -374,11 +374,13 @@ public class FederatedCoordinator implements Runnable {
             
             if(!AgentManager.getInstance().isRunning() && !ServiceProviderManager.getInstance().isRunning() && nextBid==null)
             {
-                stop();
+                break;
             }
         }
         
         this.printWinnerAuctionAsk();
+        
+        stop();
     }
     
     public void printWinnerAuctionAsk()
@@ -389,23 +391,34 @@ public class FederatedCoordinator implements Runnable {
         System.out.println("Federated Commission: Initial="+this.commission + " Additional=");
         
         
-        System.out.printf("%n%n%-30s %-30s %n", "Initial Bid", "Auction Ask Winner", "Modified Bid");
         synchronized (WAITING_MAP_LOCK)
         {
             for (Map.Entry<Bid, AuctionAsk> entry: this.waitingMap.entrySet())
             {
+                System.out.printf("%n%n%-15s %-17s   %-17s   %-17s%n", "", "Initial Bid", "Auction Ask Winner", "Modified Bid");
+                for (int i=0; i<16+18*3+2*2; i++) System.out.print("-"); System.out.println();
                 Bid bid=entry.getKey();
+                Bid bidInitial=bid;
+                Bid bidModified=null;
+                if(bid.getOriginal()!=null)
+                {
+                    bidModified=bid;
+                    bidInitial=bid.getOriginal();
+                }
                 AuctionAsk ask=entry.getValue();
                 
                 Map<Integer, IdentityResource[]> join=new HashMap<Integer, IdentityResource[]>();
-                for(IdentityResource ir:bid.getIdentityResources())
+                if(bidInitial!=null)
                 {
-                    int id=ir.getResourceType().getId();
-                    if(!join.containsKey(id))
+                    for(IdentityResource ir:bidInitial.getIdentityResources())
                     {
-                        join.put(id, new IdentityResource[]{null,null});
+                        int id=ir.getResourceType().getId();
+                        if(!join.containsKey(id))
+                        {
+                            join.put(id, new IdentityResource[]{null,null,null});
+                        }
+                        join.get(id)[0]=ir;
                     }
-                    join.get(id)[0]=ir;
                 }
                 
                 if(ask!=null)
@@ -415,49 +428,91 @@ public class FederatedCoordinator implements Runnable {
                         int id=ir.getResourceType().getId();
                         if(!join.containsKey(id))
                         {
-                            join.put(id, new IdentityResource[]{null,null});
+                            join.put(id, new IdentityResource[]{null,null,null});
                         }
                         join.get(id)[1]=ir;
                     }
                 }
                 
-                String bidText="";
-                if(bid!=null)
+                if(bidModified!=null)
                 {
-                    bidText=bid.hashCode()+"(Adapted Price="+bid.getAdaptedPrice()+")";
+                    for(IdentityResource ir:bidModified.getIdentityResources())
+                    {
+                        int id=ir.getResourceType().getId();
+                        if(!join.containsKey(id))
+                        {
+                            join.put(id, new IdentityResource[]{null,null,null});
+                        }
+                        join.get(id)[2]=ir;
+                    }
                 }
                 
-                String askText="";
+                String[] bidTextInitial=new String[4];
+                String[] bidTextModified=new String[4];
+                if(bidInitial!=null)
+                {
+                    bidTextInitial[0]=""+bidInitial.hashCode();
+                    bidTextInitial[1]="Adapted Price="+Math.round(bidInitial.getAdaptedPrice());
+                    bidTextInitial[2]="";
+                    bidTextInitial[3]="";
+                }
+                if(bidModified!=null)
+                {
+                    bidTextModified[0]=""+bidModified.hashCode();
+                    bidTextModified[1]="Adapted Price="+Math.round(bidModified.getAdaptedPrice());
+                    bidTextModified[2]="";
+                    bidTextModified[3]="";
+                }
+                
+                String[] askText=new String[4];
                 if(ask!=null)
                 {
                     int revenue=ask.getServiceProvider().getRevenue();
-                    askText=ask.hashCode()+"(Winner Price="+ask.getAdaptedPrice()+", Revenue="+revenue+", Profit=)";
+                    askText[0]=""+ask.hashCode();
+                    askText[1]="Winner Price="+Math.round(ask.getAdaptedPrice());
+                    askText[2]="Revenue="+Math.round(revenue);
+                    askText[3]="Profit=";
                 }
                 
-                System.out.printf("%-30s %-30s%n", bidText, askText);
+                for(int i=0; i<4; i++)
+                {
+                    System.out.printf("%-15s %-17s   %-17s   %-17s %n", "", bidTextInitial[i], askText[i], bidTextModified[i]);
+                }
+                
+                
+                System.out.printf("%-15s %-8s %-8s   %-8s %-8s   %-8s %-8s%n", "Resource", "Priority", "Price", "Priority", "Price", "Priority", "Price");
+                for (int i=0; i<16+6*9+2*2; i++) System.out.print("="); System.out.println();
                 
                 for (Map.Entry<Integer, IdentityResource[]> j:join.entrySet())
                 {
                     IdentityResource.ResourceType rt=IdentityResource.ResourceType.createByNumber(j.getKey());
-                    IdentityResource irBid=j.getValue()[0];
+                    IdentityResource irBidInitial=j.getValue()[0];
                     IdentityResource irAsk=j.getValue()[1];
-                    String pnameBid="";
+                    IdentityResource irBidModified=j.getValue()[2];
+                    String pnameBidInitial="";
                     String pnameAsk="";
-                    Integer priceBid=0;
+                    String pnameBidModified="";
+                    Integer priceBidInitial=0;
                     Integer priceAsk=0;
+                    Integer priceBidModified=0;
                     
                     
-                    if(irBid!=null) 
+                    if(irBidInitial!=null) 
                     {
-                        pnameBid=irBid.getPriority().name();
-                        priceBid=irBid.getPrice();
+                        pnameBidInitial=irBidInitial.getPriority().name();
+                        priceBidInitial=irBidInitial.getPrice();
                     }
                     if(irAsk!=null)
                     {
                         pnameAsk=irAsk.getPriority().name();
                         priceAsk=irAsk.getPrice();
                     }
-                    System.out.printf("%-15s %-8s %5s %-8s %5s %n", rt.name(), pnameBid, priceBid, pnameAsk, priceAsk);
+                    if(irBidModified!=null)
+                    {
+                        pnameBidModified=irBidModified.getPriority().name();
+                        priceBidModified=irBidModified.getPrice();
+                    }
+                    System.out.printf("%-15s %-8s %8s   %-8s %8s   %-8s %8s%n", rt.name(), pnameBidInitial, priceBidInitial, pnameAsk, priceAsk, pnameBidModified, priceBidModified);
                     //System.out.printf("%-30s %-30s %n", bid.toString(), ask.toString());
                 }
                 System.out.println();

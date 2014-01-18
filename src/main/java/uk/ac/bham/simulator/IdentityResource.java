@@ -98,7 +98,7 @@ public class IdentityResource
         this.price = price;
     }    
     
-    public float calculateCurrentPrice(Integer willingToPayPrice)
+    public float calculateCurrentPrice(Float willingToPayPrice)
     {        
         float sellingPrice = -1;
         float currentPrice = getCost()*(1+getPreferredProfit()/100);        
@@ -153,22 +153,22 @@ public class IdentityResource
         this.priority = priority;
     }
     
-    public void setDurationOfAuction (long time)
+    public void setDurationOfAuction (Long time)
     {
         this.Duration=time;
     }
     
-    public long getDurationOfAuction()
+    public Long getDurationOfAuction()
     {
         return Duration;
     }
     
-    public void setMaxPrice(int MaxPrice)
+    public void setMaxPrice(Integer MaxPrice)
     {
         this.MaxPrice=MaxPrice;
     }
     
-    public int getMaxPrice()
+    public Integer getMaxPrice()
     {
         return MaxPrice;
     }
