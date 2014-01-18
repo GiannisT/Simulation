@@ -135,7 +135,7 @@ public class ServiceProvider
      * @param bid
      */
     
-    public void notifyAuctionWinner(IdentityProvider identityProvider, Bid bid, Double price)
+    public void notifyAuctionWinner(IdentityProvider identityProvider, Bid bid, Float price, Float requiredPrice)
     {
         // here random if the bid change just after be a winner
         if(Utilities.generateRandomInteger(1, 10)%5<5)
@@ -162,6 +162,8 @@ public class ServiceProvider
                 bid.modifiedBy(rt, p);
             }
         }
+        
+        bid.setPreferredPrice(bid.calculateCurrentOffer(requiredPrice));
         
         bid.getAgent().getIdentityProvider().requestPayment(price, bid);        
     }

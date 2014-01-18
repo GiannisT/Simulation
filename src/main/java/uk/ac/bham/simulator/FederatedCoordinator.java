@@ -89,16 +89,22 @@ public class FederatedCoordinator implements Runnable {
         return askList;
     }
     
-    public AuctionAsk getCheapestAsk(ArrayList<AuctionAsk> askList)
+    public AuctionAsk getCheapestAsk(ArrayList<AuctionAsk> askList, float price)
     {
         AuctionAsk cheapestAsk=null;
         
         for (AuctionAsk aa: askList)
         {
-            if(cheapestAsk==null) cheapestAsk=aa;
+            if(cheapestAsk==null) 
+            {
+                if(aa.calculateCurrentPrice(price)==-1) continue;
+                cheapestAsk=aa;
+            }
             else 
             {
-                if(aa.getAdaptedPrice()<cheapestAsk.getAdaptedPrice())
+                float askPrice=aa.calculateCurrentPrice(price);
+                if(askPrice==-1) continue;
+                if(askPrice < cheapestAsk.calculateCurrentPrice(price))
                 {
                     cheapestAsk=aa;
                 }
@@ -110,10 +116,13 @@ public class FederatedCoordinator implements Runnable {
     public AuctionAsk compareWithCheapestAsk(Bid bid, ArrayList<AuctionAsk> askList)
     {
         AuctionAsk winnerAsk=null;
-        AuctionAsk cheapestAsk=getCheapestAsk(askList);
+        float price=bid.getPreferredPrice();
+        AuctionAsk cheapestAsk=getCheapestAsk(askList, price);
         if(cheapestAsk!=null)
         {
-            if(cheapestAsk.getAdaptedPrice() <= bid.getAdaptedPrice())
+            float askPrice=cheapestAsk.calculateCurrentPrice(price);
+            float bidPrice=bid.calculateCurrentOffer(askPrice);
+            if(askPrice <= bidPrice)
             {
                 winnerAsk=cheapestAsk;
             }
@@ -192,8 +201,8 @@ public class FederatedCoordinator implements Runnable {
                 {
                     ServiceProvider serviceProvider=winnerAsk.getServiceProvider();
                     identityProvider.notifyPayment(bid, serviceProvider);
-                    
-                    serviceProvider.addRevenue(Math.round(new Float(winnerAsk.getAdaptedPrice()*0.1)));
+                    float willingToPayPrice=bid.getPreferredPrice(); // TODO check if this values is ok to calculate the revenue
+                    serviceProvider.addRevenue(Math.round(new Float(winnerAsk.calculateCurrentPrice(willingToPayPrice)*0.1)));
                     this.addCommission(0.1);
                 }
             }
@@ -362,7 +371,11 @@ public class FederatedCoordinator implements Runnable {
                 {
                     if(winnerAsk!=null)
                     {
-                        winnerAsk.getServiceProvider().notifyAuctionWinner(ip, nextBid, winnerAsk.getAdaptedPrice());
+                        // winnerAsk.getAdaptedPrice()
+                        float willingToPay=nextBid.getPreferredPrice(); // TODO check if this is the final value insted of the calculate from winnerAsk
+                        float askPrice=winnerAsk.calculateCurrentPrice(willingToPay);
+                        float bidPrice=nextBid.calculateCurrentOffer(askPrice);
+                        winnerAsk.getServiceProvider().notifyAuctionWinner(ip, nextBid, bidPrice, askPrice);
                     }
                 }
                 catch (Exception exception)
@@ -447,19 +460,25 @@ public class FederatedCoordinator implements Runnable {
                     }
                 }
                 
+                float price=0;
+                
                 String[] bidTextInitial=new String[] {"", "", "", ""};
                 String[] bidTextModified=new String[] {"", "", "", ""};
                 if(bidInitial!=null)
                 {
+                    price=bidInitial.getPreferredPrice();
                     bidTextInitial[0]=""+bidInitial.hashCode();
-                    bidTextInitial[1]="Adapted Price="+Math.round(bidInitial.getAdaptedPrice());
+                    //TODO check how to pass the price
+                    bidTextInitial[1]="Price="+Math.round(bidInitial.getPreferredPrice());
                     bidTextInitial[2]="";
                     bidTextInitial[3]="";
                 }
                 if(bidModified!=null)
                 {
+                    price=bidInitial.getPreferredPrice();
                     bidTextModified[0]=""+bidModified.hashCode();
-                    bidTextModified[1]="Adapted Price="+Math.round(bidModified.getAdaptedPrice());
+                    //TODO check how to pass the price
+                    bidTextModified[1]="Price="+Math.round(bidModified.getPreferredPrice());
                     bidTextModified[2]="";
                     bidTextModified[3]="";
                 }
@@ -469,7 +488,8 @@ public class FederatedCoordinator implements Runnable {
                 {
                     int revenue=ask.getServiceProvider().getRevenue();
                     askText[0]=""+ask.hashCode();
-                    askText[1]="Winner Price="+Math.round(ask.getAdaptedPrice());
+                    //TODO check how to pass the price
+                    askText[1]="Price="+Math.round(ask.calculateCurrentPrice(price));
                     askText[2]="Revenue="+Math.round(revenue);
                     askText[3]="Profit=";
                 }
@@ -492,25 +512,27 @@ public class FederatedCoordinator implements Runnable {
                     String pnameBidInitial="";
                     String pnameAsk="";
                     String pnameBidModified="";
-                    Integer priceBidInitial=0;
-                    Integer priceAsk=0;
-                    Integer priceBidModified=0;
+                    String priceBidInitial="";
+                    String priceAsk="";
+                    String priceBidModified="";
                     
                     
                     if(irBidInitial!=null) 
                     {
                         pnameBidInitial=irBidInitial.getPriority().name();
-                        priceBidInitial=irBidInitial.getPrice();
+                        if(irBidInitial.getCost()!=null)
+                            priceBidInitial=""+irBidInitial.getCost();
                     }
                     if(irAsk!=null)
                     {
                         pnameAsk=irAsk.getPriority().name();
-                        priceAsk=irAsk.getPrice();
+                        priceAsk=""+irAsk.getCost();
                     }
                     if(irBidModified!=null)
                     {
                         pnameBidModified=irBidModified.getPriority().name();
-                        priceBidModified=irBidModified.getPrice();
+                        if(irBidModified.getCost()!=null)
+                            priceBidModified=""+irBidModified.getCost();
                     }
                     System.out.printf("%-15s %-8s %8s   %-8s %8s   %-8s %8s%n", rt.name(), pnameBidInitial, priceBidInitial, pnameAsk, priceAsk, pnameBidModified, priceBidModified);
                     //System.out.printf("%-30s %-30s %n", bid.toString(), ask.toString());
