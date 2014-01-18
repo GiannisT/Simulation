@@ -518,7 +518,7 @@ public class FederatedCoordinator implements Runnable {
                     //TODO check how to pass the price
                     askText[1]="Price="+Math.round(ask.calculateCurrentPrice(price));
                     askText[2]="Profit="+Math.round(ask.calculateCurrentPrice(price)-ask.getTotalCosts());
-                    askText[3]="Fed. Commission="+Math.round(icommission);
+                    askText[3]="Fed.Commission="+Math.round(icommission);
                     //askText[2]="Revenue="+Math.round(revenue);
                 }
                 
