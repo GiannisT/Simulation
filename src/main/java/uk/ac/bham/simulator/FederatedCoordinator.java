@@ -409,7 +409,7 @@ public class FederatedCoordinator implements Runnable {
         System.out.println();
         System.out.println("Number of bids: "+this.bidList.size());
         System.out.println("Number of service providers: "+this.serviceProviderList.size());
-        System.out.println("Federated Commission: Initial="+Math.round(this.commission) + " Additional=");
+        System.out.println("Federated Commission ("+Math.round(DEFAULTCOMMISSION*100)+"%): "+Math.round(this.commission));
         
         
         synchronized (WAITING_MAP_LOCK)
@@ -492,8 +492,8 @@ public class FederatedCoordinator implements Runnable {
                 
                 float price=0;
                 
-                String[] bidTextInitial=new String[] {"", "", "", "", ""};
-                String[] bidTextModified=new String[] {"", "", "", "", ""};
+                String[] bidTextInitial=new String[] {"--", "--", "--", "--", "--"};
+                String[] bidTextModified=new String[] {"--", "--", "--", "--", "--"};
                 if(bidInitial!=null)
                 {
                     price=bidInitial.getPreferredPrice();
@@ -509,7 +509,7 @@ public class FederatedCoordinator implements Runnable {
                     bidTextModified[1]="Price="+Math.round(bidModified.getPreferredPrice()*100+0.5)/100.0;
                 }
                 
-                String[] askText=new String[] {"", "", "", "", ""};
+                String[] askText=new String[] {"--", "--", "--", "--", "--"};
                 if(ask!=null)
                 {
                     int revenue=ask.getServiceProvider().getRevenue();
@@ -517,12 +517,12 @@ public class FederatedCoordinator implements Runnable {
                     askText[0]="Id="+ask.hashCode();
                     //TODO check how to pass the price
                     askText[1]="Price="+Math.round(ask.calculateCurrentPrice(price));
-                    askText[2]="Revenue="+Math.round(revenue);
-                    askText[3]="Profit="+Math.round(ask.calculateCurrentPrice(price)-ask.getTotalCosts());
-                    askText[4]="Commission="+Math.round(icommission);
+                    askText[2]="Profit="+Math.round(ask.calculateCurrentPrice(price)-ask.getTotalCosts());
+                    askText[3]="Fed. Commission="+Math.round(icommission);
+                    //askText[2]="Revenue="+Math.round(revenue);
                 }
                 
-                for(int i=0; i<5; i++)
+                for(int i=0; i<4; i++)
                 {
                     System.out.printf("%-15s %-17s   %-17s   %-17s %n", "", bidTextInitial[i], askText[i], bidTextModified[i]);
                 }
@@ -562,6 +562,9 @@ public class FederatedCoordinator implements Runnable {
                         if(irBidModified.getCost()!=null)
                             priceBidModified=""+irBidModified.getCost();
                     }
+                    
+                    if(pnameBidModified=="") pnameBidModified="--";
+                    if(pnameBidModified==pnameBidInitial) pnameBidModified="--";
                     System.out.printf("%-15s %-8s %8s   %-8s %8s   %-8s %8s%n", rt.name(), pnameBidInitial, priceBidInitial, pnameAsk, priceAsk, pnameBidModified, priceBidModified);
                     //System.out.printf("%-30s %-30s %n", bid.toString(), ask.toString());
                 }
