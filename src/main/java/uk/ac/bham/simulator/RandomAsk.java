@@ -4,7 +4,7 @@ public class RandomAsk extends AuctionAsk
 {
     //String[] ResourcesOffered;
     private static final int MINPRICE = 80;
-    private static final int MAXPRICE = 100;
+    private static final int MAXPRICE = 100;    
     private static final int MINPRIORITY = 1;
     private static final int MAXPRIORITY = 3;
     private static final int FIRSTRESOURCETYPE = 1;//Availability(1), Anonymity(2),         
@@ -22,7 +22,7 @@ public class RandomAsk extends AuctionAsk
         while (resourceTypeId <= LASTRESOURCETYPE)        
         {
             IdentityResource identityResource = new IdentityResource();
-            identityResource.setPrice(Utilities.generateRandomInteger(MINPRICE, MAXPRICE));
+            identityResource.setCost(DEFAULTCOST);//Utilities.generateRandomInteger(MINPRICE, MAXPRICE)
             identityResource.setPriority(IdentityResource.Priority.Low);//.createByNumber(Utilities.generateRandomInteger(MINPRIORITY,MAXPRIORITY))
             identityResource.setResourceType(IdentityResource.ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
             getIdentityResources().add(identityResource);

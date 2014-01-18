@@ -6,14 +6,13 @@ package uk.ac.bham.simulator;
  */
 public class IdentityResource 
 {
-    private Integer price;
-    private Integer MaxPrice;
+    //private Integer price;
+    //private Integer MaxPrice;
     private Long Duration;
     private ResourceType resourceType;
     private Priority priority;   
     private Integer cost;
-    private Integer minimumProfit;
-    private Integer preferredProfit;
+   
 
     
     public enum ResourceType 
@@ -85,42 +84,20 @@ public class IdentityResource
     /**
      * @return the price
      */
-    public Integer getPrice() 
+    /*public Integer getPrice() 
     {
         return price;
-    }
+    }*/
 
     /**
      * @param price the price to set
      */
-    public void setPrice(Integer price) 
+    /*public void setPrice(Integer price) 
     {
         this.price = price;
-    }    
+    }*/    
     
-    public float calculateCurrentPrice(Float willingToPayPrice)
-    {        
-        float sellingPrice = -1;
-        float currentPrice = getCost()*(1+getPreferredProfit()/100);        
-        if(currentPrice > willingToPayPrice)
-        {
-            currentPrice = getCost()*(1+getMinimumProfit()/100);
-            if(currentPrice <= willingToPayPrice)
-            {
-                int maximumProfit = getPreferredProfit();
-                do
-                {                   
-                    currentPrice = getCost()*(1+Utilities.generateRandomInteger(getMinimumProfit(), --maximumProfit)/100);
-                } while(currentPrice>willingToPayPrice); 
-                sellingPrice = currentPrice;
-            }            
-        }
-        else
-        {
-            sellingPrice = currentPrice;
-        }
-        return sellingPrice;
-    }
+
      /**
      * @return the resourceType
      */
@@ -163,7 +140,7 @@ public class IdentityResource
         return Duration;
     }
     
-    public void setMaxPrice(Integer MaxPrice)
+    /*public void setMaxPrice(Integer MaxPrice)
     {
         this.MaxPrice=MaxPrice;
     }
@@ -171,7 +148,7 @@ public class IdentityResource
     public Integer getMaxPrice()
     {
         return MaxPrice;
-    }
+    }*/
     
 /**
      * @return the cost
@@ -189,36 +166,5 @@ public class IdentityResource
         this.cost = cost;
     }
 
-    /**
-     * @return the minimumProfit
-     */
-    public Integer getMinimumProfit() 
-    {
-        return minimumProfit;
-    }
-
-    /**
-     * @param minimumProfit the minimumProfit to set
-     */
-    public void setMinimumProfit(Integer minimumProfit) 
-    {
-        this.minimumProfit = minimumProfit;
-    }
-
-    /**
-     * @return the preferredProfit
-     */
-    public Integer getPreferredProfit() 
-    {
-        return preferredProfit;
-    }
-
-    /**
-     * @param preferredProfit the preferredProfit to set
-     */
-    public void setPreferredProfit(Integer preferredProfit) 
-    {
-        this.preferredProfit = preferredProfit;
-    }
-      
+    
 }

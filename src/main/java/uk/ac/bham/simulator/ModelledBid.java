@@ -25,12 +25,13 @@ public class ModelledBid extends Bid {
         int resourceTypeId = FIRSTRESOURCETYPE;
         int sum = 0, price = 0;
         ArrayList<AuctionAsk> CurAsk;
-
+        this.setPreferredPrice(price);
+        
         while (resourceTypeId <= LASTRESOURCETYPE) {
             sum = 0;
             IdentityResource identityResource = new IdentityResource();
             CurAsk = new ArrayList<AuctionAsk>(FederatedCoordinator.getInstance().getCurrentAsks()); //it gets the available asks
-
+            /*
             if (!CurAsk.isEmpty()) {
                 for (int i = 0; i < CurAsk.size(); i++) { //try to get a sence of the CurrentPrices in the market for the requested resources hence to submit a bid that is realistic and within the current price range
                     sum += CurAsk.get(i).getIdentityResources().get(resourceTypeId).getPrice();
@@ -40,8 +41,8 @@ public class ModelledBid extends Bid {
                 
             } else if (CurAsk.isEmpty()) { // if there are no current Asks to compare prices the user should randomly specify a price
                 identityResource.setPrice(Utilities.generateRandomInteger(30, 60)); //first valuation for start bidding
-            }
-            identityResource.setMaxPrice(Utilities.generateRandomInteger(70, 200)); //Represents the higher valuation that a user can pay for a resource. The upper limit for bidding
+            }*/
+            //identityResource.setMaxPrice(Utilities.generateRandomInteger(70, 200)); //Represents the higher valuation that a user can pay for a resource. The upper limit for bidding
             identityResource.setPriority(Priority.Low);//.createByNumber(Utilities.generateRandomInteger(MINPRIORITY, MAXPRIORITY))
             identityResource.setResourceType(ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
             setTimeOfSubmission(System.currentTimeMillis()); //used for creating the points in the graph

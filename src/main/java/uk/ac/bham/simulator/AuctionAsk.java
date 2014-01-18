@@ -14,6 +14,10 @@ public class AuctionAsk
     private Integer maxDecrementPercentage; 
     //final int AlterSubmissionPerDay = 8; //describes how many times an SP can change or resubmit already submitted asks     
     ServiceProvider serviceProvider;
+    private Integer minimumProfit;
+    private Integer preferredProfit;
+    protected static final int DEFAULTCOST = 100;
+
 
     public AuctionAsk() 
     {
@@ -43,8 +47,8 @@ public class AuctionAsk
 
     /* 
      The FederatedCoordinator invoke the getAdaptedPrice for each AuctionAsk
-     */
-    public double getAdaptedPrice() 
+     */    
+    /*public double getAdaptedPrice() 
     {
         // TODO check implementation, this is a simple one
         double ret = 0;
@@ -53,7 +57,7 @@ public class AuctionAsk
             ret += ir.getPrice() * ir.getPriority().getLevel();
         }
         return ret;
-    }
+    }*/
 
     /**
      * @return the maxDecrementPercentage
@@ -85,4 +89,64 @@ public class AuctionAsk
         return ""+this.getClass().getSimpleName()+"@"+this.hashCode();//+" {"+resource+"}";
     }    
 
+    /**
+     * @return the minimumProfit
+     */
+    public Integer getMinimumProfit() 
+    {
+        return minimumProfit;
+    }
+
+    /**
+     * @param minimumProfit the minimumProfit to set
+     */
+    public void setMinimumProfit(Integer minimumProfit) 
+    {
+        this.minimumProfit = minimumProfit;
+    }
+
+    /**
+     * @return the preferredProfit
+     */
+    public Integer getPreferredProfit() 
+    {
+        return preferredProfit;
+    }
+
+    /**
+     * @param preferredProfit the preferredProfit to set
+     */
+    public void setPreferredProfit(Integer preferredProfit) 
+    {
+        this.preferredProfit = preferredProfit;
+    }
+    
+    public float calculateCurrentPrice(Float willingToPayPrice)
+    {        
+        float sellingPrice = -1;
+        
+        for (IdentityResource identityResource : identityResources)
+        {
+            float currentPrice = identityResource.getCost()*(1+getPreferredProfit()/100)* identityResource.getPriority().getLevel();        
+            if(currentPrice > willingToPayPrice)
+            {
+                currentPrice = identityResource.getCost()*(1+getMinimumProfit()/100)* identityResource.getPriority().getLevel();
+                if(currentPrice <= willingToPayPrice)
+                {
+                    int maximumProfit = getPreferredProfit();
+                    do
+                    {                   
+                        currentPrice = identityResource.getCost()*(1+Utilities.generateRandomInteger(getMinimumProfit(), --maximumProfit)/100)* identityResource.getPriority().getLevel();
+                    } while(currentPrice>willingToPayPrice); 
+                    sellingPrice = currentPrice;
+                }            
+            }
+            else
+            {
+                sellingPrice = currentPrice;
+            }
+        }        
+        return sellingPrice;
+    }
+    
 }

@@ -79,7 +79,7 @@ public class Bid
         return this.agent;
     }
     
-    public double getAdaptedPrice()
+    /*public double getAdaptedPrice()
     {
         // TODO check implementation, this is a simple one
         double ret=0;
@@ -90,7 +90,7 @@ public class Bid
             ret+=ir.calculateCurrentPrice(this.getPreferredPrice());
         }
         return ret;
-    }
+    }*/
     
     @Override
     public String toString()
@@ -98,7 +98,7 @@ public class Bid
         String resource="";
         for (IdentityResource ir:this.getIdentityResources())
         {
-            resource+="|"+ir.getResourceType().name()+","+ir.getPriority().name()+","+ir.getPrice();
+            resource+="|"+ir.getResourceType().name()+","+ir.getPriority().name()+","+getPreferredPrice()/getIdentityResources().size();
         }
         resource=resource.substring(1);
         return ""+this.getClass().getSimpleName()+"@"+this.hashCode()+" {"+resource+"}";
@@ -131,10 +131,10 @@ public class Bid
             IdentityResource nir=new IdentityResource();
             nir.setCost(ir.getCost());
             nir.setDurationOfAuction(ir.getDurationOfAuction());
-            nir.setMaxPrice(ir.getMaxPrice());
-            nir.setMinimumProfit(ir.getMinimumProfit());
-            nir.setPreferredProfit(ir.getPreferredProfit());
-            nir.setPrice(ir.getPrice());
+            //nir.setMaxPrice(ir.getMaxPrice());
+            //nir.setMinimumProfit(ir.getMinimumProfit());
+            //nir.setPreferredProfit(ir.getPreferredProfit());
+            //nir.setPrice(ir.getPrice());
             nir.setPriority(IdentityResource.Priority.createByNumber(ir.getPriority().getLevel()));
             nir.setResourceType(ir.getResourceType());
             
@@ -152,12 +152,37 @@ public class Bid
         {
             if (ir.getResourceType().equals(resourceType))
             {
-                Float currentPrice=ir.calculateCurrentPrice(this.getPreferredPrice());
+                Float currentPrice=calculateCurrentOffer(this.getPreferredPrice());
                 ir.setPriority(priority);
-                Float newPrice=ir.calculateCurrentPrice(this.getPreferredPrice());
+                Float newPrice=calculateCurrentOffer(this.getPreferredPrice());
                 Float delta=(newPrice-currentPrice);
                 this.setPreferredPrice(this.getPreferredPrice()+delta);
             }
         }
+    }
+    
+    
+    public float calculateCurrentOffer(Float requiredPrice)
+    {        
+        float offeringPrice = -1;
+        if(getPreferredPrice() < requiredPrice)
+        {
+            float currentPrice = getPreferredPrice()*(1+getMaxIncrementPercentage()/100);
+            if(currentPrice >= requiredPrice)
+            {
+                int currentIncrementPercentage = 0;
+                do
+                {                   
+                    currentIncrementPercentage++;
+                    currentPrice = getPreferredPrice()*(1+currentIncrementPercentage/100);
+                } while(currentIncrementPercentage<getMaxIncrementPercentage() || currentPrice>requiredPrice); 
+                offeringPrice = currentPrice;
+            }            
+        }
+        else
+        {
+            offeringPrice = preferredPrice;
+        }               
+        return offeringPrice;
     }
 }

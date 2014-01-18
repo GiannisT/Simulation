@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class ModelledAsk extends AuctionAsk {
 
     private static int MINPRICE;
+    private static final int DEFAULTCOST = 100;
     private static final int FIRSTRESOURCETYPE = 1;//Availability(1), Anonymity(2),         
     private static final int LASTRESOURCETYPE = 4; //Integrity(3), Performance(4);
     ArrayList<Integer> PreviousAsksForAvailability = new ArrayList<Integer>();
@@ -52,7 +53,7 @@ public class ModelledAsk extends AuctionAsk {
                     PreviousAsksForPerformance.add(MINPRICE);
                 }
 
-                identityResource.setPrice(MINPRICE);
+                identityResource.setCost(DEFAULTCOST);                
                 identityResource.setResourceType(IdentityResource.ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
                 identityResource.setDurationOfAuction(new Long(Utilities.generateRandomInteger(40000, 100000)));
                 getIdentityResources().add(identityResource);
@@ -71,7 +72,7 @@ public class ModelledAsk extends AuctionAsk {
                 PreviousAsksForPerformance.add(Price);
             }
             
-             identityResource.setPrice(Price);
+             identityResource.setCost(DEFAULTCOST);
              identityResource.setResourceType(IdentityResource.ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
              identityResource.setDurationOfAuction(new Long(Utilities.generateRandomInteger(100000, 200000)));
              getIdentityResources().add(identityResource);
