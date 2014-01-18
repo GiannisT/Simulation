@@ -128,8 +128,8 @@ public class AuctionAsk
         
         for (IdentityResource identityResource : identityResources)
         {
-            preferedPrice += identityResource.getCost()*(1+getPreferredProfit()/100)* identityResource.getPriority().getLevel(); 
-            minimumPrice += identityResource.getCost()*(1+getMinimumProfit()/100)* identityResource.getPriority().getLevel();
+            preferedPrice += identityResource.getCost()*(1.0f+getPreferredProfit()/100.0f)* identityResource.getPriority().getLevel(); 
+            minimumPrice += identityResource.getCost()*(1.0f+getMinimumProfit()/100.0f)* identityResource.getPriority().getLevel();
         }                                    
         if(preferedPrice > willingToPayPrice)
         {
@@ -142,7 +142,7 @@ public class AuctionAsk
                     currentPrice = 0;
                     for (IdentityResource identityResource : identityResources)
                     {
-                        currentPrice += identityResource.getCost()*(1+Utilities.generateRandomInteger(getMinimumProfit(), --maximumProfit)/100)* identityResource.getPriority().getLevel();
+                        currentPrice += identityResource.getCost()*(1.0f+Utilities.generateRandomInteger(getMinimumProfit(), --maximumProfit)/100.0f)* identityResource.getPriority().getLevel();
                     }
                 } while(currentPrice > willingToPayPrice); 
                 sellingPrice = currentPrice;

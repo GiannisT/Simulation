@@ -173,14 +173,14 @@ public class Bid
         float offeringPrice = -1;
         if(getPreferredPrice() < requiredPrice)
         {
-            float currentPrice = getPreferredPrice()*(1+getMaxIncrementPercentage()/100);
+            float currentPrice = getPreferredPrice()*(1.0f+getMaxIncrementPercentage()/100.0f);
             if(currentPrice >= requiredPrice)
             {
                 int currentIncrementPercentage = 0;
                 do
                 {                   
                     currentIncrementPercentage++;
-                    currentPrice = getPreferredPrice()*(1+currentIncrementPercentage/100);
+                    currentPrice = getPreferredPrice()*(1.0f+currentIncrementPercentage/100.0f);
                 } while(currentIncrementPercentage<getMaxIncrementPercentage() || currentPrice>requiredPrice); 
                 offeringPrice = currentPrice;
             }            

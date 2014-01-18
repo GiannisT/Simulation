@@ -92,6 +92,8 @@ public class FederatedCoordinator implements Runnable {
     public AuctionAsk getCheapestAsk(ArrayList<AuctionAsk> askList, float price)
     {
         AuctionAsk cheapestAsk=null;
+        int counter=0;
+        String steps="";
         
         for (AuctionAsk aa: askList)
         {
@@ -100,16 +102,19 @@ public class FederatedCoordinator implements Runnable {
                 if(aa.calculateCurrentPrice(price)==-1) continue;
                 cheapestAsk=aa;
             }
-            else 
+
+            float askPrice=aa.calculateCurrentPrice(price);
+            if(askPrice==-1) continue;
+            
+            counter++;
+            float cheapestPrice=cheapestAsk.calculateCurrentPrice(price);
+            steps+=", "+Math.round(askPrice)+"("+aa.getMinimumProfit()+","+aa.getPreferredProfit()+")";
+            if(askPrice <= cheapestPrice)
             {
-                float askPrice=aa.calculateCurrentPrice(price);
-                if(askPrice==-1) continue;
-                if(askPrice < cheapestAsk.calculateCurrentPrice(price))
-                {
-                    cheapestAsk=aa;
-                }
+                cheapestAsk=aa;
             }
         }
+        System.out.printf("Calculate CHEAPEST ASK from a list of "+askList.size()+" AuctionAsk and a price of "+Math.round(price)+" only "+counter+" Ask as available %n%s%n",steps);
         return cheapestAsk;
     }
     
@@ -406,9 +411,31 @@ public class FederatedCoordinator implements Runnable {
         
         synchronized (WAITING_MAP_LOCK)
         {
+            System.out.println();
+            for (int i=0; i<16+18*3+2*2; i++) System.out.print("/"); System.out.println();
+            for (int i=0; i<(16+18*3+2*2)/16; i++) System.out.print("RANDOM AUCTION  "); System.out.println();
+            for (int i=0; i<16+18*3+2*2; i++) System.out.print("\\"); System.out.println();
+            
+            int bidCounter=0;
             for (Map.Entry<Bid, AuctionAsk> entry: this.waitingMap.entrySet())
             {
-                System.out.printf("%n%n%-15s %-17s   %-17s   %-17s%n", "", "Initial Bid", "Auction Ask Winner", "Modified Bid");
+                bidCounter++;
+                String footer="";
+                String header=""+bidCounter;
+                while (header.length()<3) header="0"+header;
+                footer="  END BID # "+header+" ";
+                header="  BEGIN BID # "+header+"  ";
+                while (header.length()<16+18*3+2*2)
+                    if(header.length()%2==0) header+="*";
+                    else header="*"+header;
+                while (footer.length()<16+18*3+2*2)
+                    if(footer.length()%2==0) footer+="*";
+                    else footer="*"+footer;
+                
+                System.out.printf("%n%n%n");
+                System.out.println(header);
+                
+                System.out.printf("%-15s %-17s   %-17s   %-17s%n", "", "Initial Bid", "Auction Ask Winner", "Modified Bid");
                 for (int i=0; i<16+18*3+2*2; i++) System.out.print("-"); System.out.println();
                 Bid bid=entry.getKey();
                 Bid bidInitial=bid;
@@ -500,7 +527,7 @@ public class FederatedCoordinator implements Runnable {
                 }
                 
                 
-                System.out.printf("%-15s %-8s %-8s   %-8s %-8s   %-8s %-8s%n", "Resource", "Priority", "Price", "Priority", "Price", "Priority", "Price");
+                System.out.printf("%-15s %-8s %8s   %-8s %8s   %-8s %8s%n", "Resource", "Priority", "", "Priority", "Price", "Priority", "");
                 for (int i=0; i<16+6*9+2*2; i++) System.out.print("="); System.out.println();
                 
                 for (Map.Entry<Integer, IdentityResource[]> j:join.entrySet())
@@ -537,6 +564,7 @@ public class FederatedCoordinator implements Runnable {
                     System.out.printf("%-15s %-8s %8s   %-8s %8s   %-8s %8s%n", rt.name(), pnameBidInitial, priceBidInitial, pnameAsk, priceAsk, pnameBidModified, priceBidModified);
                     //System.out.printf("%-30s %-30s %n", bid.toString(), ask.toString());
                 }
+                System.out.println(footer);
                 System.out.println();
             }
         }
@@ -570,6 +598,8 @@ public class FederatedCoordinator implements Runnable {
         }
               //}}));
         
+        
+        /*
         System.out.println();
         System.out.println("*** Ready for new task ***");
         FederatedCoordinator.getInstance().clear();
@@ -588,6 +618,7 @@ public class FederatedCoordinator implements Runnable {
             Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
         }
         Graph.GenerateGraph();
+        */
     }
     
     public synchronized void setPropertyAsInteger(String key, Integer value)
