@@ -157,6 +157,11 @@ public class Bid
                 Float newPrice=calculateCurrentOffer(this.getPreferredPrice());
                 Float delta=(newPrice-currentPrice);
                 this.setPreferredPrice(this.getPreferredPrice()+delta);
+                
+                System.out.println(this.original+"was modified\n"+
+                        " resource="+resourceType.name()+" from "+oldPriority.name()+ " to "+priority.name()+
+                        " old price="+currentPrice+", new price="+newPrice+
+                        "\n"+this);
             }
         }
     }
