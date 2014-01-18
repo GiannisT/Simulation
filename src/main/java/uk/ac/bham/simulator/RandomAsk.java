@@ -27,8 +27,9 @@ public class RandomAsk extends AuctionAsk
             identityResource.setResourceType(IdentityResource.ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
             getIdentityResources().add(identityResource);
         }
-        this.setPreferredProfit(Utilities.generateRandomInteger(25, 60));
-        this.setMinimumProfit(20);
+        this.setMinimumProfit(Utilities.generateRandomInteger(40, 50));
+        this.setPreferredProfit(Utilities.generateRandomInteger(51, 100));
+        
     }
      
 }
