@@ -19,6 +19,8 @@ import org.jfree.chart.demo.Graph;
  * @author Francisco Ramirez
  */
 public class FederatedCoordinator implements Runnable {
+    private static final Float DEFAULTCOMMISSION=0.05f;
+    
     static Double Initialtime;
     ArrayList<ServiceProvider> serviceProviderList=null;
     ArrayList<IdentityProvider> identityProviderList=null;
@@ -32,7 +34,7 @@ public class FederatedCoordinator implements Runnable {
     Map<String, ArrayList<MonitorRecord>> monitorMap=new HashMap<String, ArrayList<MonitorRecord>>();
     
     private static final FederatedCoordinator instance=new FederatedCoordinator();
-    private Double commission;
+    private Float commission;
     
     
     private final String SERVICE_PROVIDER_LOCK="SERVICE PROVIDER LOCK";
@@ -54,7 +56,7 @@ public class FederatedCoordinator implements Runnable {
         bidList=new ArrayList<Bid>();
         notifiedBidList=new ArrayList<Bid>();
         waitingMap=new java.util.HashMap<Bid, AuctionAsk>();
-        commission = 0.0;
+        commission = 0.0f;
     }
     
     public void clear()
@@ -66,7 +68,7 @@ public class FederatedCoordinator implements Runnable {
         bidList.clear();
         notifiedBidList.clear();
         waitingMap.clear();
-        commission= 0.0;
+        commission= 0.0f;
     }
 
     
@@ -207,8 +209,9 @@ public class FederatedCoordinator implements Runnable {
                     ServiceProvider serviceProvider=winnerAsk.getServiceProvider();
                     identityProvider.notifyPayment(bid, serviceProvider);
                     float willingToPayPrice=bid.getPreferredPrice(); // TODO check if this values is ok to calculate the revenue
-                    serviceProvider.addRevenue(Math.round(new Float(winnerAsk.calculateCurrentPrice(willingToPayPrice)*0.1)));
-                    this.addCommission(0.1);
+                    float askPrice=winnerAsk.calculateCurrentPrice(willingToPayPrice);
+                    serviceProvider.addRevenue(Math.round(new Float(askPrice*0.1)));
+                    this.addCommission(Math.round(askPrice*DEFAULTCOMMISSION)*1.0f);
                 }
             }
         }
@@ -406,7 +409,7 @@ public class FederatedCoordinator implements Runnable {
         System.out.println();
         System.out.println("Number of bids: "+this.bidList.size());
         System.out.println("Number of service providers: "+this.serviceProviderList.size());
-        System.out.println("Federated Commission: Initial="+this.commission + " Additional=");
+        System.out.println("Federated Commission: Initial="+Math.round(this.commission) + " Additional=");
         
         
         synchronized (WAITING_MAP_LOCK)
@@ -435,7 +438,7 @@ public class FederatedCoordinator implements Runnable {
                 System.out.printf("%n%n%n");
                 System.out.println(header);
                 
-                System.out.printf("%-15s %-17s   %-17s   %-17s%n", "", "Initial Bid", "Ask Winner", "Modified Bid");
+                System.out.printf("%-15s %-17s   %-17s   %-17s%n", "", "Initial Bid", "Ask Winner", "Adapted Bid");
                 for (int i=0; i<16+18*3+2*2; i++) System.out.print("-"); System.out.println();
                 Bid bid=entry.getKey();
                 Bid bidInitial=bid;
@@ -489,45 +492,43 @@ public class FederatedCoordinator implements Runnable {
                 
                 float price=0;
                 
-                String[] bidTextInitial=new String[] {"", "", "", ""};
-                String[] bidTextModified=new String[] {"", "", "", ""};
+                String[] bidTextInitial=new String[] {"", "", "", "", ""};
+                String[] bidTextModified=new String[] {"", "", "", "", ""};
                 if(bidInitial!=null)
                 {
                     price=bidInitial.getPreferredPrice();
                     bidTextInitial[0]="Id="+bidInitial.hashCode();
                     //TODO check how to pass the price
-                    bidTextInitial[1]="Price="+Math.round(bidInitial.getPreferredPrice());
-                    bidTextInitial[2]="";
-                    bidTextInitial[3]="";
+                    bidTextInitial[1]="Price="+Math.round(bidInitial.getPreferredPrice()*100+0.5)/100.0;
                 }
                 if(bidModified!=null)
                 {
                     price=bidInitial.getPreferredPrice();
                     bidTextModified[0]="Id="+bidModified.hashCode();
                     //TODO check how to pass the price
-                    bidTextModified[1]="Price="+Math.round(bidModified.getPreferredPrice());
-                    bidTextModified[2]="";
-                    bidTextModified[3]="";
+                    bidTextModified[1]="Price="+Math.round(bidModified.getPreferredPrice()*100+0.5)/100.0;
                 }
                 
-                String[] askText=new String[] {"", "", "", ""};
+                String[] askText=new String[] {"", "", "", "", ""};
                 if(ask!=null)
                 {
                     int revenue=ask.getServiceProvider().getRevenue();
+                    int icommission=Math.round(ask.calculateCurrentPrice(price)*DEFAULTCOMMISSION);
                     askText[0]="Id="+ask.hashCode();
                     //TODO check how to pass the price
                     askText[1]="Price="+Math.round(ask.calculateCurrentPrice(price));
                     askText[2]="Revenue="+Math.round(revenue);
                     askText[3]="Profit=";
+                    askText[4]="Commission="+Math.round(icommission);
                 }
                 
-                for(int i=0; i<4; i++)
+                for(int i=0; i<5; i++)
                 {
                     System.out.printf("%-15s %-17s   %-17s   %-17s %n", "", bidTextInitial[i], askText[i], bidTextModified[i]);
                 }
                 
                 
-                System.out.printf("%-15s %-8s %8s   %-8s %8s   %-8s %8s%n", "Resource", "Priority", "", "Priority", "Price", "Priority", "");
+                System.out.printf("%-15s %-8s %8s   %-8s %8s   %-8s %8s%n", "Resource", "Priority", "", "Priority", "", "Priority", "");
                 for (int i=0; i<16+6*9+2*2; i++) System.out.print("="); System.out.println();
                 
                 for (Map.Entry<Integer, IdentityResource[]> j:join.entrySet())
@@ -553,7 +554,7 @@ public class FederatedCoordinator implements Runnable {
                     if(irAsk!=null)
                     {
                         pnameAsk=irAsk.getPriority().name();
-                        priceAsk=""+irAsk.getCost();
+                        ////priceAsk=""+irAsk.getCost();
                     }
                     if(irBidModified!=null)
                     {
@@ -656,7 +657,7 @@ public class FederatedCoordinator implements Runnable {
     /**
      * @return the commission
      */
-    public Double getCommission() 
+    public Float getCommission() 
     {
         return commission;
     }
@@ -664,7 +665,7 @@ public class FederatedCoordinator implements Runnable {
     /**
      * @param commission the commission to set
      */
-    public void addCommission(Double commission) 
+    public void addCommission(Float commission) 
     {
         this.commission += commission;
     }

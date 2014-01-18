@@ -130,8 +130,9 @@ public class ServiceProvider
 
     /**
      *
-     * @param resourceList
      * @param identityProvider
+     * @param price
+     * @param requiredPrice
      * @param bid
      */
     
@@ -160,10 +161,11 @@ public class ServiceProvider
             if(modified)
             {
                 bid.modifiedBy(rt, p);
+                // TODO check why the value is not updated
+                bid.setPreferredPrice(bid.calculateCurrentOffer(requiredPrice));
             }
         }
         
-        bid.setPreferredPrice(bid.calculateCurrentOffer(requiredPrice));
         
         bid.getAgent().getIdentityProvider().requestPayment(price, bid);        
     }
