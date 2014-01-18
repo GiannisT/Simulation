@@ -435,7 +435,7 @@ public class FederatedCoordinator implements Runnable {
                 System.out.printf("%n%n%n");
                 System.out.println(header);
                 
-                System.out.printf("%-15s %-17s   %-17s   %-17s%n", "", "Initial Bid", "Auction Ask Winner", "Modified Bid");
+                System.out.printf("%-15s %-17s   %-17s   %-17s%n", "", "Initial Bid", "Ask Winner", "Modified Bid");
                 for (int i=0; i<16+18*3+2*2; i++) System.out.print("-"); System.out.println();
                 Bid bid=entry.getKey();
                 Bid bidInitial=bid;
