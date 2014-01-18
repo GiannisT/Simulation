@@ -124,28 +124,34 @@ public class AuctionAsk
     public float calculateCurrentPrice(Float willingToPayPrice)
     {        
         float sellingPrice = -1;
+        float preferedPrice = 0, minimumPrice = 0;
         
         for (IdentityResource identityResource : identityResources)
         {
-            float currentPrice = identityResource.getCost()*(1+getPreferredProfit()/100)* identityResource.getPriority().getLevel();        
-            if(currentPrice > willingToPayPrice)
+            preferedPrice += identityResource.getCost()*(1+getPreferredProfit()/100)* identityResource.getPriority().getLevel(); 
+            minimumPrice += identityResource.getCost()*(1+getMinimumProfit()/100)* identityResource.getPriority().getLevel();
+        }                                    
+        if(preferedPrice > willingToPayPrice)
+        {
+            if(minimumPrice <= willingToPayPrice)
             {
-                currentPrice = identityResource.getCost()*(1+getMinimumProfit()/100)* identityResource.getPriority().getLevel();
-                if(currentPrice <= willingToPayPrice)
-                {
-                    int maximumProfit = getPreferredProfit();
-                    do
-                    {                   
-                        currentPrice = identityResource.getCost()*(1+Utilities.generateRandomInteger(getMinimumProfit(), --maximumProfit)/100)* identityResource.getPriority().getLevel();
-                    } while(currentPrice>willingToPayPrice); 
-                    sellingPrice = currentPrice;
-                }            
-            }
-            else
-            {
+                int maximumProfit = getPreferredProfit();
+                float currentPrice = 0;
+                do
+                {                   
+                    currentPrice = 0;
+                    for (IdentityResource identityResource : identityResources)
+                    {
+                        currentPrice += identityResource.getCost()*(1+Utilities.generateRandomInteger(getMinimumProfit(), --maximumProfit)/100)* identityResource.getPriority().getLevel();
+                    }
+                } while(currentPrice > willingToPayPrice); 
                 sellingPrice = currentPrice;
-            }
-        }        
+            }            
+        }
+        else
+        {
+            sellingPrice = preferedPrice;
+        }
         return sellingPrice;
     }
     

@@ -27,7 +27,7 @@ public class RandomBid extends Bid
     {        
         int resourceTypeId = FIRSTRESOURCETYPE;
          
-        this.setPreferredPrice(Utilities.generateRandomInteger(400, 700));
+        this.setPreferredPrice(Utilities.generateRandomInteger(600, 700));
         while (resourceTypeId <= LASTRESOURCETYPE)        
         {
             IdentityResource identityResource = new IdentityResource();
