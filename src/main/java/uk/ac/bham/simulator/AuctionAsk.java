@@ -155,4 +155,14 @@ public class AuctionAsk
         return sellingPrice;
     }
     
+    public float getTotalCosts()
+    {
+        float totalCosts = 0f;
+        for (IdentityResource identityResource : identityResources)
+        {
+            totalCosts += identityResource.getCost(); 
+        } 
+        return totalCosts;                
+    }
+    
 }
