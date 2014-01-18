@@ -467,7 +467,7 @@ public class FederatedCoordinator implements Runnable {
                 if(bidInitial!=null)
                 {
                     price=bidInitial.getPreferredPrice();
-                    bidTextInitial[0]=""+bidInitial.hashCode();
+                    bidTextInitial[0]="Id="+bidInitial.hashCode();
                     //TODO check how to pass the price
                     bidTextInitial[1]="Price="+Math.round(bidInitial.getPreferredPrice());
                     bidTextInitial[2]="";
@@ -476,7 +476,7 @@ public class FederatedCoordinator implements Runnable {
                 if(bidModified!=null)
                 {
                     price=bidInitial.getPreferredPrice();
-                    bidTextModified[0]=""+bidModified.hashCode();
+                    bidTextModified[0]="Id="+bidModified.hashCode();
                     //TODO check how to pass the price
                     bidTextModified[1]="Price="+Math.round(bidModified.getPreferredPrice());
                     bidTextModified[2]="";
@@ -487,7 +487,7 @@ public class FederatedCoordinator implements Runnable {
                 if(ask!=null)
                 {
                     int revenue=ask.getServiceProvider().getRevenue();
-                    askText[0]=""+ask.hashCode();
+                    askText[0]="Id="+ask.hashCode();
                     //TODO check how to pass the price
                     askText[1]="Price="+Math.round(ask.calculateCurrentPrice(price));
                     askText[2]="Revenue="+Math.round(revenue);
