@@ -10,6 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import uk.ac.bham.simulator.util.DataStat;
 
 /**
  *
@@ -157,8 +158,8 @@ public class AgentManager extends TimerTask {
             {
                 Bid bid=agent.createBid(this.isRandom);
                 FederatedCoordinator.getInstance().publishBid(bid);
-                int tmp=FederatedCoordinator.getInstance().incrementCounter("bid");
-                FederatedCoordinator.getInstance().recordValue("bid", tmp);
+                int tmp=DataStat.getInstance().incrementCounter("bid");
+                DataStat.getInstance().recordValue("bid", tmp);
                 Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {bid, agent, FederatedCoordinator.getInstance()});
             }
             counter--;

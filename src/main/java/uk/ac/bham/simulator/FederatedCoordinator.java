@@ -7,7 +7,6 @@
 package uk.ac.bham.simulator;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -30,18 +29,15 @@ public class FederatedCoordinator implements Runnable {
     ArrayList<Bid> notifiedBidList=null;
     Map<Bid, AuctionAsk> waitingMap=null;
     boolean running=false;
-    Map<String, Integer> propertiesInteger=new HashMap<String, Integer>();
-    Map<String, ArrayList<MonitorRecord>> monitorMap=new HashMap<String, ArrayList<MonitorRecord>>();
     
     private static final FederatedCoordinator instance=new FederatedCoordinator();
     private Float commission;
     
     
-    private final String SERVICE_PROVIDER_LOCK="SERVICE PROVIDER LOCK";
     private final String IDENTITY_PROVIDER_LOCK="IDENTITY PROVIDER LOCK";
-    private final String AUCTION_ASK_LOCK="AUCTION ASK LOCK";
     private final String AGENT_LOCK="AGENT LOCK";
-    private final String BID_LOCK="BID LOCK";
+    private final String SERVICE_PROVIDER_LOCK="SERVICE PROVIDER LOCK";
+    private final String BID_AUCTION_ASK_LOCK="BID AUCTION ASK LOCK";
     private final String NOTIFIED_BID_LOCK="NOTIFIED BID LOCK";
     private final String RUNNING_LOCK="RUNNING LOCK";
     private final String WAITING_MAP_LOCK="WAITING MAP LOCK";
@@ -83,7 +79,7 @@ public class FederatedCoordinator implements Runnable {
     {
         ArrayList<AuctionAsk> askList=new ArrayList<AuctionAsk>();
         
-        synchronized (AUCTION_ASK_LOCK)
+        synchronized (BID_AUCTION_ASK_LOCK)
         {
             askList.addAll(auctionAskList);
         }
@@ -91,7 +87,20 @@ public class FederatedCoordinator implements Runnable {
         return askList;
     }
     
-    public AuctionAsk getCheapestAsk(ArrayList<AuctionAsk> askList, float price)
+    public ArrayList<AuctionAsk> getTwoCheapestAsk(ArrayList<AuctionAsk> askList, float price)
+    {
+        ArrayList<AuctionAsk> cheapestAskList=new ArrayList<AuctionAsk>();
+        
+        AuctionAsk ask0=this.getCheapestAsk(askList, price, null);
+        AuctionAsk ask1=this.getCheapestAsk(askList, price, ask0);
+        
+        if(ask0!=null) cheapestAskList.add(ask0);
+        if(ask1!=null) cheapestAskList.add(ask1);
+        
+        return cheapestAskList;
+    }
+    
+    public AuctionAsk getCheapestAsk(ArrayList<AuctionAsk> askList, float price, AuctionAsk but)
     {
         AuctionAsk cheapestAsk=null;
         int counter=0;
@@ -99,6 +108,8 @@ public class FederatedCoordinator implements Runnable {
         
         for (AuctionAsk aa: askList)
         {
+            if(aa==but) continue;
+            
             if(cheapestAsk==null) 
             {
                 if(aa.calculateCurrentPrice(price)==-1) continue;
@@ -120,24 +131,25 @@ public class FederatedCoordinator implements Runnable {
         return cheapestAsk;
     }
     
-    public AuctionAsk compareWithCheapestAsk(Bid bid, ArrayList<AuctionAsk> askList)
+    public ArrayList<AuctionAsk> compareWithCheapestAsk(Bid bid, ArrayList<AuctionAsk> askList)
     {
+        ArrayList<AuctionAsk> winnerAskList=new ArrayList<AuctionAsk>();
         AuctionAsk winnerAsk=null;
         float price=bid.getPreferredPrice();
-        AuctionAsk cheapestAsk=getCheapestAsk(askList, price);
-        if(cheapestAsk!=null)
+        ArrayList<AuctionAsk> cheapestAsk=getTwoCheapestAsk(askList, price);
+        if(cheapestAsk!=null && cheapestAsk.size()==2)
         {
-            float askPrice=cheapestAsk.calculateCurrentPrice(price);
+            float askPrice=cheapestAsk.get(0).calculateCurrentPrice(price);
             float bidPrice=bid.calculateCurrentOffer(askPrice);
             if(askPrice <= bidPrice)
             {
-                winnerAsk=cheapestAsk;
+                winnerAskList.addAll(cheapestAsk);
             }
         }
        
         Graph.setChartValues( (Math.floor((bid.getTimeOfSubmission()/6000)*100)/100), (double)(Math.floor(((System.currentTimeMillis()-Initialtime)/6000)*100)/100) ); //update the dataset that will be used to develop the graph
      
-        return winnerAsk;
+        return winnerAskList;
     }
     
     /* The agent publish a bid to the FederatedCoordinator */
@@ -169,7 +181,7 @@ public class FederatedCoordinator implements Runnable {
     {
         boolean isPublished;
         
-        synchronized(AUCTION_ASK_LOCK)
+        synchronized(BID_AUCTION_ASK_LOCK)
         {
             if(!auctionAskList.contains(auctionAsk))
             {
@@ -307,7 +319,7 @@ public class FederatedCoordinator implements Runnable {
     public void notifyBid(Bid bid)
     {
         boolean addit=false;
-        synchronized (BID_LOCK)
+        synchronized (BID_AUCTION_ASK_LOCK)
         {
             if(this.bidList.contains(bid) && !this.notifiedBidList.contains(bid))
             {
@@ -329,7 +341,7 @@ public class FederatedCoordinator implements Runnable {
     public Bid getNextBid()
     {
         Bid nextBid=null;
-        synchronized (BID_LOCK)
+        synchronized (BID_AUCTION_ASK_LOCK)
         {
             for(Bid b:this.bidList)
             {
@@ -341,6 +353,17 @@ public class FederatedCoordinator implements Runnable {
             }
         }
         return nextBid;
+    }
+    
+    public void setWinnerAskForBid(Bid nextBid, AuctionAsk winnerAsk)
+    {
+        synchronized (WAITING_MAP_LOCK)
+        {
+            if(!waitingMap.containsKey(nextBid))
+            {
+                waitingMap.put(nextBid, winnerAsk);
+            }
+        }
     }
     
     /**
@@ -363,17 +386,14 @@ public class FederatedCoordinator implements Runnable {
             {
                 Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.INFO, "a {0} was detected by {1} to search and auction ask winner", new Object[] {nextBid, FederatedCoordinator.getInstance()});
                 
-                ArrayList<AuctionAsk> aList=this.getCurrentAsks();
-                AuctionAsk winnerAsk=this.compareWithCheapestAsk(nextBid, aList);
+                ArrayList<AuctionAsk> askList=this.getCurrentAsks();
+                ArrayList<AuctionAsk> winnerAskList=this.compareWithCheapestAsk(nextBid, askList);
+                AuctionAsk winnerAsk=null;
+                if(winnerAskList.size()>0) winnerAsk=winnerAskList.get(0);
                 this.notifyBid(nextBid);
                 IdentityProvider ip=nextBid.getAgent().getIdentityProvider();
-                synchronized (WAITING_MAP_LOCK)
-                {
-                    if(!waitingMap.containsKey(nextBid))
-                    {
-                        waitingMap.put(nextBid, winnerAsk);
-                    }
-                }
+                
+                this.setWinnerAskForBid(nextBid, winnerAsk);
                 // TODO notify to IdentityProvider of Agent ??
                 try
                 {
@@ -383,6 +403,12 @@ public class FederatedCoordinator implements Runnable {
                         float willingToPay=nextBid.getPreferredPrice(); // TODO check if this is the final value insted of the calculate from winnerAsk
                         float askPrice=winnerAsk.calculateCurrentPrice(willingToPay);
                         float bidPrice=nextBid.calculateCurrentOffer(askPrice);
+                        
+                        if(winnerAskList!=null && winnerAskList.size()==2)
+                        {
+                            askPrice=winnerAskList.get(1).calculateCurrentPrice(willingToPay); // second price
+                            bidPrice=nextBid.calculateCurrentOffer(askPrice);
+                        }
                         winnerAsk.getServiceProvider().notifyAuctionWinner(ip, nextBid, bidPrice, askPrice);
                     }
                 }
@@ -625,31 +651,7 @@ public class FederatedCoordinator implements Runnable {
         */
     }
     
-    public synchronized void setPropertyAsInteger(String key, Integer value)
-    {
-        propertiesInteger.put(key, value);
-    }
-    
-    public synchronized Integer getPropertyAsInteger(String key)
-    {
-        Integer tmp=propertiesInteger.get(key);
-        return tmp;
-    }
-    
-    public synchronized void initCounter(String counter)
-    {
-        this.setPropertyAsInteger(counter, 0);
-    }
-    
-    public synchronized int incrementCounter(String counter)
-    {
-        Integer otmp=this.getPropertyAsInteger(counter);
-        int tmp=0;
-        if(otmp!=null) tmp=otmp;
-        tmp++;
-        this.setPropertyAsInteger(counter, tmp);
-        return tmp;
-    }
+
     
     @Override
     public String toString()
@@ -673,40 +675,5 @@ public class FederatedCoordinator implements Runnable {
         this.commission += commission;
     }
     
-    
-    class MonitorRecord 
-    {
-        Calendar timestamp;
-        double value;
-        
-        public MonitorRecord(long ts, double v)
-        {
-            timestamp=Calendar.getInstance();
-            timestamp.setTimeInMillis(ts);
-            value=v;
-        }
-        
-        public Calendar getTimestamp()
-        {
-            return timestamp;
-        }
-        
-        public double getValue()
-        {
-            return value;
-        }
-        
-    }
-    
-    public synchronized void recordValue(String monitor, double value)
-    {
-        ArrayList<MonitorRecord> list=this.monitorMap.get(monitor);
-        if(list==null)
-        {
-            this.monitorMap.put(monitor, new ArrayList<MonitorRecord>());
-            list=this.monitorMap.get(monitor);
-        }
-        MonitorRecord mr=new MonitorRecord(Calendar.getInstance().getTimeInMillis(), value);
-        list.add(mr);
-    }
+
 }
