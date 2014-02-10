@@ -170,7 +170,7 @@ public class Auction implements Runnable {
 
     public ArrayList<AuctionAsk> compareWithCheapestAsk(Bid bid, ArrayList<AuctionAsk> askList) {
         ArrayList<AuctionAsk> winnerAskList = new ArrayList<AuctionAsk>();
-        AuctionAsk winnerAsk = null;
+        //AuctionAsk winnerAsk = null;
         float price = bid.getPreferredPrice();
         ArrayList<AuctionAsk> cheapestAsk = getTwoCheapestAsk(askList, price);
         if (cheapestAsk != null && cheapestAsk.size() == 2) {
@@ -240,6 +240,13 @@ public class Auction implements Runnable {
             }
             
             Bid nextBid = this.getNextBid();
+            if (nextBid!=null)
+            {
+                for (IdentityResource ir: nextBid.getIdentityResources())
+                {
+                    HistoricalPrice.getInstance().addPrice(ir.getResourceType(), ir.getCost()*nextBid.getPreferredPrice()*1.0f);
+                }
+            }
             if (nextBid != null) {
                 Logger.getLogger(Auction.class.getName()).log(Level.INFO, "a {0} was detected by {1} to search and auction ask winner", new Object[]{nextBid, FederatedCoordinator.getInstance()});
 
@@ -249,7 +256,12 @@ public class Auction implements Runnable {
                 if (winnerAskList.size() > 0) {
                     winnerAsk = winnerAskList.get(0);
                 }
-                if(oneWinnerAsk==null) oneWinnerAsk=winnerAsk;
+                if(oneWinnerAsk==null) 
+                {
+                    oneWinnerAsk=winnerAsk;
+                } else {
+                    
+                }
                 if(oneWinnerBid==null) {
                     try
                     {
