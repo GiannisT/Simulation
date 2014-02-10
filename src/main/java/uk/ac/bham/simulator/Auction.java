@@ -226,6 +226,12 @@ public class Auction implements Runnable {
     }    
 
     public synchronized void run() {
+        Bid oneWinnerBid=null;
+        AuctionAsk oneWinnerAsk=null;
+        
+        Float lastPrice=null;
+        ArrayList<Float> priceList=new ArrayList<Float>();
+        
         while (isRunning()) {
             try {
                 wait(150);
@@ -243,31 +249,84 @@ public class Auction implements Runnable {
                 if (winnerAskList.size() > 0) {
                     winnerAsk = winnerAskList.get(0);
                 }
-                this.notifyBid(nextBid);
-                IdentityProvider ip = nextBid.getAgent().getIdentityProvider();
-
-                this.setWinnerAskForBid(nextBid, winnerAsk);
-                // TODO notify to IdentityProvider of Agent ??
-                try {
-                    if (winnerAsk != null) {
-                        // winnerAsk.getAdaptedPrice()
-                        float willingToPay = nextBid.getPreferredPrice(); // TODO check if this is the final value insted of the calculate from winnerAsk
-                        float askPrice = winnerAsk.calculateCurrentPrice(willingToPay);
-                        float bidPrice = nextBid.calculateCurrentOffer(askPrice);
-
-                        if (winnerAskList != null && winnerAskList.size() == 2) {
-                            askPrice = winnerAskList.get(1).calculateCurrentPrice(willingToPay); // second price
-                            bidPrice = nextBid.calculateCurrentOffer(askPrice);
-                        }
-                        winnerAsk.getServiceProvider().notifyAuctionWinner(ip, nextBid, bidPrice, askPrice);
+                if(oneWinnerAsk==null) oneWinnerAsk=winnerAsk;
+                if(oneWinnerBid==null) {
+                    try
+                    {
+                        oneWinnerBid=nextBid;
+                        float willingToPay = oneWinnerBid.getPreferredPrice();
+                        float askPrice = oneWinnerAsk.calculateCurrentPrice(willingToPay);
+                        float bidPrice = oneWinnerBid.calculateCurrentOffer(askPrice);
+                        
+                        lastPrice=bidPrice;
+                        priceList.add(bidPrice);
+                    } catch (Exception exception)
+                    {
+                        System.out.println("debug why exception here..." + exception);
                     }
-                } catch (Exception exception) {
-                    System.out.println("debug why exception here..." + exception);
+                } else {
+                    try
+                    {
+                        float willingToPay = nextBid.getPreferredPrice();
+                        float askPrice = oneWinnerAsk.calculateCurrentPrice(willingToPay);
+                        float bidPrice = nextBid.calculateCurrentOffer(askPrice);
+                        
+                        if (bidPrice>lastPrice)
+                        {
+                            oneWinnerBid=nextBid;
+                            lastPrice=bidPrice;
+                        }
+                        priceList.add(bidPrice);
+                    } catch (Exception exception)
+                    {
+                        System.out.println("debug why exception here..." + exception);
+                    }
                 }
-                Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.INFO, "the {0} had a winner {1}", new Object[]{nextBid, winnerAsk});
+
+                this.notifyBid(nextBid); // to move nextBid
             }
             
             if(nextBid==null) stop();
+        }
+        
+        // ONE BID AND ASK WINNER FOR EACH AUCTION
+        if(oneWinnerAsk!=null && oneWinnerBid!=null)
+        {
+            for(int i=0; i<priceList.size()-2; i++)
+            {
+                for(int j=i+1; j<priceList.size()-1; j++)
+                {
+                    float pi=priceList.get(i);
+                    float pj=priceList.get(j);
+                    
+                    if(pi>pj)
+                    {
+                        priceList.set(i, pj);
+                        priceList.set(j, pi);
+                    }
+                }
+            }
+            float secondLowPrice=priceList.get(0);
+            if(priceList.size()>1) secondLowPrice=priceList.get(1);
+            
+            IdentityProvider ip = oneWinnerBid.getAgent().getIdentityProvider();
+
+            this.setWinnerAskForBid(oneWinnerBid, oneWinnerAsk);
+            // TODO notify to IdentityProvider of Agent ??
+            try {
+                // winnerAsk.getAdaptedPrice()
+                //float willingToPay = oneWinnerBid.getPreferredPrice(); // TODO check if this is the final value insted of the calculate from winnerAsk
+                float askPrice;
+                float bidPrice;
+
+                askPrice = oneWinnerAsk.calculateCurrentPrice(secondLowPrice); // second price
+                bidPrice = oneWinnerBid.calculateCurrentOffer(askPrice);
+
+                oneWinnerAsk.getServiceProvider().notifyAuctionWinner(ip, oneWinnerBid, bidPrice, askPrice);
+            } catch (Exception exception) {
+                System.out.println("debug why exception here..." + exception);
+            }
+            Logger.getLogger(Auction.class.getName()).log(Level.INFO, "the {0} had a winner {1}", new Object[]{oneWinnerBid, oneWinnerAsk});
         }
     }
 
