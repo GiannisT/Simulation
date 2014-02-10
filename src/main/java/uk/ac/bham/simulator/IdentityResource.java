@@ -51,9 +51,9 @@ public class IdentityResource
        
     public enum Priority 
     {         
-        Low(0.9f), 
-        Medium(1f),
-        High(1.1f);
+        Low(1.0f), 
+        Medium(1.3f),
+        High(1.6f);
         private float level;        
         
         Priority(float level) 

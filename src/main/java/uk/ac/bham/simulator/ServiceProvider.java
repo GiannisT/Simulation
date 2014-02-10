@@ -142,12 +142,12 @@ public class ServiceProvider
         if(Utilities.generateRandomInteger(1, 10)%5<5)
         {
             IdentityResource.ResourceType rt=IdentityResource.ResourceType.createByNumber(Utilities.generateRandomInteger(1, 4)); // FIRSTRESOURCETYPE
-            float priorityValue=0.9f;
+            float priorityValue=1.0f;
             switch(Utilities.generateRandomInteger(1, 3))
             {
-                case 1: priorityValue=0.9f; break;
-                case 2: priorityValue=1f; break;
-                case 3: priorityValue=1.1f; break;
+                case 1: priorityValue=1.0f; break;
+                case 2: priorityValue=1.3f; break;
+                case 3: priorityValue=1.6f; break;
             }
             IdentityResource.Priority p=IdentityResource.Priority.createByNumber(priorityValue);
             boolean modified=false;
