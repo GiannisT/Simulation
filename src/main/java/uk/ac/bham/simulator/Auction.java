@@ -276,6 +276,9 @@ public class Auction implements Runnable {
         while (s.length()<3) s="0"+s;
         s=s+" ";
         
+        if(n%2==0) s="\u001B[35m"+s;
+        else s="\u001B[34m"+s;
+        
         System.out.println(s);
         System.out.println(s+"Number of bids: " + this.bidList.size());
         System.out.println(s+"Number of auction asks: " + this.auctionAskList.size());
@@ -329,7 +332,7 @@ public class Auction implements Runnable {
                 for (int i = 0; i < 16 + 18 * 3 + 2 * 2; i++) {
                     System.out.print("-");
                 }
-                System.out.println(s);
+                System.out.println();
                 Bid bid = entry.getKey();
                 Bid bidInitial = bid;
                 Bid bidModified = null;
@@ -408,7 +411,7 @@ public class Auction implements Runnable {
                 for (int i = 0; i < 16 + 6 * 9 + 2 * 2; i++) {
                     System.out.print("=");
                 }
-                System.out.println(s);
+                System.out.println();
 
                 for (Map.Entry<Integer, IdentityResource[]> j : join.entrySet()) {
                     IdentityResource.ResourceType rt = IdentityResource.ResourceType.createByNumber(j.getKey());
