@@ -45,6 +45,8 @@ public class ModelledBid extends Bid {
             //identityResource.setMaxPrice(Utilities.generateRandomInteger(70, 200)); //Represents the higher valuation that a user can pay for a resource. The upper limit for bidding
             identityResource.setPriority(Priority.Low);//.createByNumber(Utilities.generateRandomInteger(MINPRIORITY, MAXPRIORITY))
             identityResource.setResourceType(ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
+            //TODO why cost is null for Random
+            //identityResource.setCost(Math.round(HistoricalPrice.getInstance().getPrice(identityResource.getResourceType())));
             setTimeOfSubmission(System.currentTimeMillis()); //used for creating the points in the graph
             getIdentityResources().add(identityResource);
         }

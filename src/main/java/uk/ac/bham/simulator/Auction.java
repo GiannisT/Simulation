@@ -244,7 +244,8 @@ public class Auction implements Runnable {
             {
                 for (IdentityResource ir: nextBid.getIdentityResources())
                 {
-                    HistoricalPrice.getInstance().addPrice(ir.getResourceType(), ir.getCost()*nextBid.getPreferredPrice()*1.0f);
+                    // TODO why get cost is null
+                    // HistoricalPrice.getInstance().addPrice(ir.getResourceType(), ir.getCost()*nextBid.getPreferredPrice()*1.0f);
                 }
             }
             if (nextBid != null) {

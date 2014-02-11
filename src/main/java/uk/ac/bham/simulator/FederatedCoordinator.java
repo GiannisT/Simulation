@@ -350,7 +350,7 @@ public class FederatedCoordinator implements Runnable {
         }
               //}}));
 
-        /*
+/*        
          System.out.println();
          System.out.println("*** Ready for new task ***");
          FederatedCoordinator.getInstance().clear();
@@ -368,6 +368,8 @@ public class FederatedCoordinator implements Runnable {
          } catch (InterruptedException ex) {
          Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
          }
+         */
+         /*
          Graph.GenerateGraph();
          */
     }
