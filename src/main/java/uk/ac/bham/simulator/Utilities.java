@@ -16,7 +16,11 @@ public class Utilities
         Random aRandom = new Random();
         if (aStart > aEnd) 
         {
-            throw new IllegalArgumentException("Start cannot exceed End.");
+            // TODO restore to throw exception
+            //throw new IllegalArgumentException("Start cannot exceed End.");
+            int tmp=aEnd;
+            aEnd=aStart;
+            aStart=tmp;
         }
         //get the range, casting to long to avoid overflow problems
         long range = (long)aEnd - (long)aStart + 1;

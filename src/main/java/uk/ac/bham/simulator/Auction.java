@@ -136,16 +136,34 @@ public class Auction implements Runnable {
                 cheapestAsk = aa;
             }
 
-            float askPrice = aa.calculateCurrentPrice(price);
-            if (askPrice == -1) {
-                continue;
+            float askPrice;
+            
+            try
+            {
+                askPrice = aa.calculateCurrentPrice(price);
+                if (askPrice == -1) {
+                    continue;
+                }
+            }
+            catch (IllegalArgumentException ex)
+            {
+                System.out.println("Error calculating current price for askPrice="+aa+"("+price+")");
+                aa.calculateCurrentPrice(price);
+                throw ex;
             }
 
             counter++;
-            float cheapestPrice = cheapestAsk.calculateCurrentPrice(price);
-            steps += ", " + Math.round(askPrice) + "(" + aa.getMinimumProfit() + "," + aa.getPreferredProfit() + ")";
-            if (askPrice <= cheapestPrice) {
-                cheapestAsk = aa;
+            try
+            {
+                float cheapestPrice = cheapestAsk.calculateCurrentPrice(price);
+                steps += ", " + Math.round(askPrice) + "(" + aa.getMinimumProfit() + "," + aa.getPreferredProfit() + ")";
+                if (askPrice <= cheapestPrice) {
+                    cheapestAsk = aa;
+                }
+            } catch (IllegalArgumentException ex)
+            {
+                System.out.println("Error calculating current price for cheapestAsk="+cheapestAsk+"("+price+")");
+                throw ex;
             }
         }
         System.out.printf("Calculate CHEAPEST ASK from a list of " + askList.size() + " AuctionAsk and a price of " + Math.round(price) + " only " + counter + " Ask as available %n%s%n", steps);
@@ -478,7 +496,7 @@ public class Auction implements Runnable {
                     System.out.printf(s+"%-15s %-17s   %-17s   %-17s %n", "", bidTextInitial[i], askText[i], bidTextModified[i]);
                 }
 
-                System.out.printf(s+"%-15s %-8s %8s   %-8s %8s   %-8s %8s%n", "Resource", "Priority", "", "Priority", "", "Priority", "");
+                System.out.printf(s+"%-15s %-8s %8s   %-8s %8s   %-8s %8s%n", "Features", "Priority", "", "Priority", "", "Priority", "");
                 System.out.print(s);
                 for (int i = 0; i < 16 + 6 * 9 + 2 * 2; i++) {
                     System.out.print("=");

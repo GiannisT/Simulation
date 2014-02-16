@@ -78,15 +78,15 @@ public class AuctionAsk
     @Override
     public String toString()
     {
-        /*
+        
         String resource="";
         for (IdentityResource ir:this.getIdentityResources())
         {
-            resource+="|"+ir.getResourceType().name()+","+ir.getPriority().name()+","+ir.getPrice();
+            resource+="|"+ir.getResourceType().name()+","+ir.getPriority().name();
         }
         resource=resource.substring(1);        
-                */
-        return ""+this.getClass().getSimpleName()+"@"+this.hashCode();//+" {"+resource+"}";
+                
+        return ""+this.getClass().getSimpleName()+"@"+this.hashCode()+" {"+resource+"}";
     }    
 
     /**

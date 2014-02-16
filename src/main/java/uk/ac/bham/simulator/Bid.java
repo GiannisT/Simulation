@@ -145,26 +145,42 @@ public class Bid
         return clone;
     }
     
-    public void modifiedBy(IdentityResource.ResourceType resourceType, IdentityResource.Priority priority)
+    public void modifiedBy(ArrayList<IdentityResource.ResourceType> resourceType, ArrayList<IdentityResource.Priority> priority)
     {
+        float sum=0.0f;
+        Float currentPrice=this.getPreferredPrice(); //calculateCurrentOffer(this.getPreferredPrice());
+        
         this.original=this.clone();
-        for(IdentityResource ir:this.getIdentityResources())
+        String concat="";
+        for(int i=0; i<resourceType.size(); i++)
         {
-            if (ir.getResourceType().equals(resourceType))
+            IdentityResource.ResourceType rt=resourceType.get(i);
+            IdentityResource.Priority p=priority.get(i);
+            
+            for(IdentityResource ir:this.getIdentityResources())
             {
-                Float currentPrice=calculateCurrentOffer(this.getPreferredPrice());
-                IdentityResource.Priority oldPriority=ir.getPriority();
-                ir.setPriority(priority);
-                Float newPrice=calculateCurrentOffer(this.getPreferredPrice());
-                Float delta=(newPrice-currentPrice);
-                this.setPreferredPrice(this.getPreferredPrice()+delta);
-                
-                System.out.println(this.original+"was modified\n"+
-                        " resource="+resourceType.name()+" from "+oldPriority.name()+ " to "+priority.name()+
-                        " old price="+currentPrice+", new price="+newPrice+
-                        "\n"+this);
+                if (ir.getResourceType().equals(rt))
+                {
+                    IdentityResource.Priority oldPriority=ir.getPriority();
+                    ir.setPriority(p);
+                    float delta=p.getLevel()-oldPriority.getLevel();
+                    if(delta > 0.0f )
+                    {
+                        sum+=delta;
+                    }
+                    concat+="\n"+
+                        " resource="+rt.name()+" from "+oldPriority.name()+ " to "+p.name();
+                }
             }
         }
+        
+        float newPrice=this.getPreferredPrice()*(1+sum);
+        this.setPreferredPrice(newPrice);
+
+        System.out.println(this.original+"was modified\n"+concat.substring(1)+
+                " old price="+currentPrice+", new price="+newPrice+
+                "\n"+this);
+        
     }
     
     

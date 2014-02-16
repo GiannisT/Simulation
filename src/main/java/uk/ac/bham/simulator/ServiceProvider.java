@@ -127,6 +127,20 @@ public class ServiceProvider
         
     }*/
     
+    protected IdentityResource.ResourceType getRandomResourceType(IdentityResource.ResourceType but)
+    {
+        int number=Utilities.generateRandomInteger(1, 4);
+        
+        if(but!=null)
+        {
+            while (number==but.getId())
+            {
+                number=Utilities.generateRandomInteger(1, 4);
+            }
+        }
+        return IdentityResource.ResourceType.createByNumber(number);
+    }
+    
 
     /**
      *
@@ -138,12 +152,18 @@ public class ServiceProvider
     
     public void notifyAuctionWinner(IdentityProvider identityProvider, Bid bid, Float price, Float requiredPrice)
     {
+        IdentityResource.ResourceType firstResourceType=null;
+        ArrayList<IdentityResource.ResourceType> rtList=new ArrayList<IdentityResource.ResourceType>();
+        ArrayList<IdentityResource.Priority> pList=new ArrayList<IdentityResource.Priority>();
         // here random if the bid change just after be a winner
-        if(Utilities.generateRandomInteger(1, 10)%5<5)
+        int count=0;
+        while(count<2)
         {
-            IdentityResource.ResourceType rt=IdentityResource.ResourceType.createByNumber(Utilities.generateRandomInteger(1, 4)); // FIRSTRESOURCETYPE
+            // one or two times
+            IdentityResource.ResourceType rt=getRandomResourceType(firstResourceType); // FIRSTRESOURCETYPE
+
             float priorityValue=1.0f;
-            switch(Utilities.generateRandomInteger(1, 3))
+            switch(Utilities.generateRandomInteger(1, 3)) // begin with Low, so change to Midium or High
             {
                 case 1: priorityValue=1.0f; break;
                 case 2: priorityValue=1.3f; break;
@@ -160,11 +180,23 @@ public class ServiceProvider
             }
             if(modified)
             {
-                bid.modifiedBy(rt, p);
+                count++;
+                firstResourceType=rt;
+                rtList.add(rt);
+                pList.add(p);
                 // TODO check why the value is not updated
-                bid.setPreferredPrice(bid.calculateCurrentOffer(requiredPrice));
+                /*
+                if(i==0) firstAddNewPrice=(oldPrice/bid.getIdentityResources().size()*(1-priorityValue));
+                else secondAddNewPrice=(oldPrice/bid.getIdentityResources().size()*(1-priorityValue));
+                float tmpPrice=oldPrice+firstAddNewPrice+secondAddNewPrice;
+                tmpPrice=Math.round(tmpPrice/100.0f)*100.0f;
+                bid.setPreferredPrice(/ * bid.calculateCurrentOffer(requiredPrice)* /tmpPrice);
+                */
             }
         }
+        
+        bid.modifiedBy(rtList, pList);
+
         
         
         bid.getAgent().getIdentityProvider().requestPayment(price, bid);        
