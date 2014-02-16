@@ -471,7 +471,8 @@ public class Auction implements Runnable {
                     price = bidInitial.getPreferredPrice();
                     bidTextInitial[0] = "Id=" + bidInitial.hashCode();
                     //TODO check how to pass the price
-                    bidTextInitial[1] = "Price=" + Math.round(bidInitial.getPreferredPrice() * 100 + 0.5) / 100.0;
+                    bidTextInitial[1] = "Second-Highest";
+                    bidTextInitial[2] = "Price=" + Math.round(bidInitial.getPreferredPrice() * 100 + 0.5) / 100.0;
                 }
                 if (bidModified != null) {
                     price = bidInitial.getPreferredPrice();
