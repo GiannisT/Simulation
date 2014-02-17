@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class ModelledAsk extends AuctionAsk {
 
     private static int MINPRICE;
-    private static final int DEFAULTCOST = 100;
     private static final int FIRSTRESOURCETYPE = 1;//Availability(1), Anonymity(2),         
     private static final int LASTRESOURCETYPE = 4; //Integrity(3), Performance(4);
     ArrayList<Integer> PreviousAsksForAvailability = new ArrayList<Integer>();
@@ -26,7 +25,7 @@ public class ModelledAsk extends AuctionAsk {
         while (resourceTypeId <= LASTRESOURCETYPE) {
             IdentityResource identityResource = new IdentityResource();
 
-            if ( !(PreviousAsksForAnonymity.isEmpty() && PreviousAsksForAvailability.isEmpty() && PreviousAsksForIntegrity.isEmpty() && PreviousAsksForPerformance.isEmpty())){
+            if ( (!PreviousAsksForAnonymity.isEmpty() && !PreviousAsksForAvailability.isEmpty() && !PreviousAsksForIntegrity.isEmpty() && !PreviousAsksForPerformance.isEmpty())){
                 if (resourceTypeId == 1) {
                     for (int i = 0; i < PreviousAsksForAvailability.size(); i++) {
                         AvailSum += PreviousAsksForAvailability.get(i);
@@ -54,6 +53,7 @@ public class ModelledAsk extends AuctionAsk {
                 }
 
                 identityResource.setCost(DEFAULTCOST);                
+                identityResource.setPriority(IdentityResource.Priority.Low);
                 identityResource.setResourceType(IdentityResource.ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
                 identityResource.setDurationOfAuction(new Long(Utilities.generateRandomInteger(40000, 100000)));
                 getIdentityResources().add(identityResource);
@@ -72,12 +72,16 @@ public class ModelledAsk extends AuctionAsk {
                 PreviousAsksForPerformance.add(Price);
             }
             
-             identityResource.setCost(DEFAULTCOST);
-             identityResource.setResourceType(IdentityResource.ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
-             identityResource.setDurationOfAuction(new Long(Utilities.generateRandomInteger(100000, 200000)));
-             getIdentityResources().add(identityResource);
+            identityResource.setCost(DEFAULTCOST);
+            identityResource.setPriority(IdentityResource.Priority.Low);
+            identityResource.setResourceType(IdentityResource.ResourceType.createByNumber(resourceTypeId++));//Utilities.generateRandomInteger(FIRSTRESOURCE,LASTRESOURCE)
+            identityResource.setDurationOfAuction(new Long(Utilities.generateRandomInteger(100000, 200000)));
+            getIdentityResources().add(identityResource);
        }
      }
+        // TODO minimum profit and preferred profit trend
+        this.setMinimumProfit(Utilities.generateRandomInteger(40, 50));
+        this.setPreferredProfit(Utilities.generateRandomInteger(51, 10));
    }
 }
     

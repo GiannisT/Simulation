@@ -294,6 +294,7 @@ public class Auction implements Runnable {
                     } catch (Exception exception)
                     {
                         System.out.println("debug why exception here..." + exception);
+                        exception.printStackTrace();
                     }
                 } else {
                     try
@@ -311,6 +312,7 @@ public class Auction implements Runnable {
                     } catch (Exception exception)
                     {
                         System.out.println("debug why exception here..." + exception);
+                        exception.printStackTrace();
                     }
                 }
 
@@ -356,6 +358,7 @@ public class Auction implements Runnable {
                 oneWinnerAsk.getServiceProvider().notifyAuctionWinner(ip, oneWinnerBid, bidPrice, askPrice);
             } catch (Exception exception) {
                 System.out.println("debug why exception here..." + exception);
+                exception.printStackTrace();
             }
             Logger.getLogger(Auction.class.getName()).log(Level.INFO, "the {0} had a winner {1}", new Object[]{oneWinnerBid, oneWinnerAsk});
         }
@@ -381,7 +384,10 @@ public class Auction implements Runnable {
             }
             System.out.printf("%n"+s);
             for (int i = 0; i < (16 + 18 * 3 + 2 * 2) / 16; i++) {
-                System.out.print("RANDOM AUCTION  ");
+                if(AgentManager.getInstance().isRandom())
+                    System.out.print("RANDOM AUCTION  ");
+                else
+                    System.out.print("MODELLED AUCTION  ");
             }
             System.out.printf("%n"+s);
             for (int i = 0; i < 16 + 18 * 3 + 2 * 2; i++) {
