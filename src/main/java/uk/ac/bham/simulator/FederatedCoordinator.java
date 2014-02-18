@@ -15,7 +15,7 @@ import org.jfree.chart.demo.Graph;
  * @author Francisco Ramirez
  */
 public class FederatedCoordinator implements Runnable {
-
+    
     private static final Float DEFAULTCOMMISSION = 0.05f;
 
     static Double Initialtime;

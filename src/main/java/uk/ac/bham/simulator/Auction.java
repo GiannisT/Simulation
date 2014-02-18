@@ -434,7 +434,7 @@ public class Auction implements Runnable {
                 System.out.printf("%s%n%s%n",s,s);
                 System.out.println(s+header);
 
-                System.out.printf(s+"%-15s %-17s   %-17s   %-17s%n", "", "Winner Bid", "Winner Ask", "Adapted Bid");
+                System.out.printf(s+"%-15s %-17s   %-17s   %-17s%n", "", "Current State", "Matched Ask", "Adapted State");
                 System.out.print(s);
                 for (int i = 0; i < 16 + 18 * 3 + 2 * 2; i++) {
                     System.out.print("-");
