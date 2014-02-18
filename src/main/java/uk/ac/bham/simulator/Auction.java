@@ -107,7 +107,7 @@ public class Auction implements Runnable {
                     float willingToPayPrice = bid.getPreferredPrice(); // TODO check if this values is ok to calculate the revenue
                     float askPrice = winnerAsk.calculateCurrentPrice(willingToPayPrice);
                     serviceProvider.addRevenue(Math.round(new Float(askPrice * 0.1)));
-                    FederatedCoordinator.getInstance().addCommission(Math.round(askPrice * FederatedCoordinator.getDefaultCommission()) * 1.0f);
+                    //FederatedCoordinator.getInstance().addCommission(Math.round(askPrice * FederatedCoordinator.getDefaultCommission() * 1.0f) * 1.0f);
                 }
             }
         }
@@ -271,7 +271,7 @@ public class Auction implements Runnable {
                 }
             }
             if (nextBid != null) {
-                Logger.getLogger(Auction.class.getName()).log(Level.INFO, "a {0} was detected by {1} to search and auction winner ask", new Object[]{nextBid, FederatedCoordinator.getInstance()});
+                if (FederatedCoordinator.isDebugging()) Logger.getLogger(Auction.class.getName()).log(Level.INFO, "a {0} was detected by {1} to search and auction winner ask", new Object[]{nextBid, FederatedCoordinator.getInstance()});
 
                 ArrayList<AuctionAsk> askList = this.getCurrentAsks();
                 ArrayList<AuctionAsk> winnerAskList = this.compareWithCheapestAsk(nextBid, askList);
@@ -371,7 +371,7 @@ public class Auction implements Runnable {
                 System.out.println("debug why exception here..." + exception);
                 exception.printStackTrace();
             }
-            Logger.getLogger(Auction.class.getName()).log(Level.INFO, "the {0} had a winner {1}", new Object[]{oneWinnerBid, oneWinnerAsk});
+            if (FederatedCoordinator.isDebugging()) Logger.getLogger(Auction.class.getName()).log(Level.INFO, "the {0} had a winner {1}", new Object[]{oneWinnerBid, oneWinnerAsk});
         }
     }
 
@@ -514,6 +514,8 @@ public class Auction implements Runnable {
                     //TODO check how to pass the price
                     bidTextModified[1] = "T-A Price=" + Math.round(bidModified.getPreferredPrice() * 100 + 0.5) / 100.0;
                     bidTextModified[2] = "Fed.Commission=" + Math.round(icommission);
+                    
+                    FederatedCoordinator.getInstance().addCommission(icommission*1.0f);
                 }
 
                 for (int i = 0; i < 4; i++) {

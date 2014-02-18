@@ -15,7 +15,7 @@ import org.jfree.chart.demo.Graph;
  * @author Francisco Ramirez
  */
 public class FederatedCoordinator implements Runnable {
-    private static boolean debug=true;
+    private static boolean debug=false;
     
     private static final Float DEFAULTCOMMISSION = 0.05f;
 
@@ -322,23 +322,22 @@ public class FederatedCoordinator implements Runnable {
         int c=0;
         for (Auction a : auctionList) {
             c++;
+            System.out.println("\u001B[0m");
             System.out.println();
             System.out.println();
             System.out.println("AUCTION # 0"+c);
             a.printWinnerAuctionAsk(c);
+            System.out.println("\u001B[0m");
         }
         System.out.println();
-        System.out.println("Federated Commission (" + Math.round(FederatedCoordinator.getDefaultCommission() * 100) + "%): " + Math.round(FederatedCoordinator.getInstance().getCommission()));
+        System.out.println("Federated Commission (" + Math.round(FederatedCoordinator.getDefaultCommission() * 100.0f) + "%): " + Math.round(FederatedCoordinator.getInstance().getCommission()));
 
     }
 
     public static void main(String[] args) {
-        if(args.length>1 && args[1].equals("--no-debug"))
+        if(args.length>1 && args[1].equals("--debug"))
         {
-            FederatedCoordinator.debug=false;
-            Logger.getLogger(AgentManager.class.getName()).setLevel(Level.SEVERE);
-            Logger.getLogger(Auction.class.getName()).setLevel(Level.SEVERE);
-            Logger.getLogger(ServiceProvider.class.getName()).setLevel(Level.SEVERE);
+            FederatedCoordinator.debug=true;
             
         }
         

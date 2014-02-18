@@ -114,7 +114,7 @@ public class ServiceProviderManager extends TimerTask {
         {
             ServiceProvider serviceProvider=new ServiceProvider();
             FederatedCoordinator.getInstance().registerServiceProvider(serviceProvider);
-            Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new {0} was created and added to {1}", new Object[] {serviceProvider, FederatedCoordinator.getInstance()});
+            if (FederatedCoordinator.isDebugging()) Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new {0} was created and added to {1}", new Object[] {serviceProvider, FederatedCoordinator.getInstance()});
 
             AskCreator creator=new AskCreator(serviceProvider, 2, isRandom);
             creator.start();
@@ -165,7 +165,7 @@ public class ServiceProviderManager extends TimerTask {
                 ask.configIdentityResources();
                 
                 FederatedCoordinator.getInstance().publishAuctionAsk(ask);
-                Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {ask, serviceProvider, FederatedCoordinator.getInstance()});
+                if (FederatedCoordinator.isDebugging()) Logger.getLogger(ServiceProviderManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {ask, serviceProvider, FederatedCoordinator.getInstance()});
             }
             counter--;
             if(counter<=0)
