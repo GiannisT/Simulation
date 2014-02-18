@@ -559,6 +559,9 @@ public class Auction implements Runnable {
                     if (pnameBidModified == "") {
                         pnameBidModified = "--";
                     }
+                    if (pnameAsk == pnameBidInitial) {
+                        pnameAsk = "--";
+                    }
                     if (pnameBidModified == pnameBidInitial) {
                         pnameBidModified = "--";
                     }
