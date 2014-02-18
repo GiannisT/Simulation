@@ -123,8 +123,7 @@ public class AgentManager extends TimerTask {
         if (isRunning() && counter>0)
         {   
             Agent agent=new Agent(ip);
-            FederatedCoordinator.getInstance().addSession(agent);
-            Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was created and added to {1}", new Object[] {agent, FederatedCoordinator.getInstance()});
+            if (FederatedCoordinator.isDebugging()) Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was created and added to {1}", new Object[] {agent, FederatedCoordinator.getInstance()});
             
             BidCreator creator=new BidCreator(agent, 2, true);
             creator.start();

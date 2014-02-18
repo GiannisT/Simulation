@@ -15,6 +15,7 @@ import org.jfree.chart.demo.Graph;
  * @author Francisco Ramirez
  */
 public class FederatedCoordinator implements Runnable {
+    private static boolean debug=true;
     
     private static final Float DEFAULTCOMMISSION = 0.05f;
 
@@ -46,6 +47,11 @@ public class FederatedCoordinator implements Runnable {
         commission = 0.0f;
 
         auctionList = new ArrayList<Auction>();
+    }
+    
+    public static boolean isDebugging()
+    {
+        return debug;
     }
 
     public void clear() {
@@ -327,6 +333,15 @@ public class FederatedCoordinator implements Runnable {
     }
 
     public static void main(String[] args) {
+        if(args.length>1 && args[1].equals("--no-debug"))
+        {
+            FederatedCoordinator.debug=false;
+            Logger.getLogger(AgentManager.class.getName()).setLevel(Level.SEVERE);
+            Logger.getLogger(Auction.class.getName()).setLevel(Level.SEVERE);
+            Logger.getLogger(ServiceProvider.class.getName()).setLevel(Level.SEVERE);
+            
+        }
+        
         Initialtime = (double) System.currentTimeMillis();
         FederatedCoordinator.getInstance().start();
 

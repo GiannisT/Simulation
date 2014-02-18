@@ -177,7 +177,7 @@ public class Bid
         float newPrice=this.getPreferredPrice()*(1+sum);
         this.setPreferredPrice(newPrice);
 
-        System.out.println(this.original+"was modified\n"+concat.substring(1)+
+        if (FederatedCoordinator.isDebugging()) System.out.println(this.original+"was modified\n"+concat.substring(1)+
                 " old price="+currentPrice+", new price="+newPrice+
                 "\n"+this);
         

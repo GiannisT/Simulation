@@ -170,7 +170,7 @@ public class Auction implements Runnable {
                 throw ex;
             }
         }
-        System.out.printf("Calculate CHEAPEST ASK from a list of " + askList.size() + " AuctionAsk and a price of " + Math.round(price) + " only " + counter + " Ask as available %n%s%n", steps);
+        if (FederatedCoordinator.isDebugging()) System.out.printf("Calculate CHEAPEST ASK from a list of " + askList.size() + " AuctionAsk and a price of " + Math.round(price) + " only " + counter + " Ask as available %n%s%n", steps);
         return cheapestAsk;
     }
     
