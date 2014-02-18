@@ -24,6 +24,7 @@ public class AgentManager extends TimerTask {
     
     public static final String RUNNING_LOCK="RUNNING LOCK";
     
+    private int totalBid=20;
     private int counter;
     private Timer timer;
     
@@ -36,6 +37,11 @@ public class AgentManager extends TimerTask {
             this.running=false;
             this.isRandom=true;
         }
+    }
+    
+    public int getTotalBid()
+    {
+        return this.totalBid;
     }
     
     public static void clear()
@@ -158,6 +164,7 @@ public class AgentManager extends TimerTask {
             {
                 Bid bid=agent.createBid(this.isRandom);
                 FederatedCoordinator.getInstance().publishBid(bid);
+                AgentManager.getInstance().totalBid--;
                 int tmp=DataStat.getInstance().incrementCounter("bid");
                 DataStat.getInstance().recordValue("bid", tmp);
                 Logger.getLogger(AgentManager.class.getName()).log(Level.INFO, "a new {0} was published by {1} to {2}", new Object[] {bid, agent, FederatedCoordinator.getInstance()});

@@ -20,12 +20,12 @@ import uk.ac.bham.simulator.IdentityResource.ResourceType;
  * @author Francisco Ramirez
  */
 public class HistoricalPrice {
-    private Map<ResourceType, ArrayList<Float>> historical;
+    private Map<String, ArrayList<Float>> historical;
     private static final HistoricalPrice instance=new HistoricalPrice();
     
     private HistoricalPrice()
     {
-        historical=new HashMap<ResourceType, ArrayList<Float>>();
+        historical=new HashMap<String, ArrayList<Float>>();
     }
     
     public static HistoricalPrice getInstance()
@@ -35,10 +35,26 @@ public class HistoricalPrice {
     
     public void addPrice(ResourceType ir, Float price)
     {
-        historical.get(ir).add(price);
+        this.addPrice("RESOURCE_TYPE="+ir.getId(), price);
     }
     
     public Float getPrice(ResourceType ir)
+    {
+        return this.getPrice("RESOURCE_TYPE="+ir.getId());
+    }
+    
+    public void addPrice(String ir, Float price)
+    {
+        ArrayList<Float> list=historical.get(ir);
+        if(list==null)
+        {
+            list=new ArrayList<Float>();
+            historical.put(ir, list);
+        }
+        list.add(price);
+    }
+    
+    public Float getPrice(String ir)
     {
         Float avgPrice=0f;
         int count=0;
@@ -48,8 +64,17 @@ public class HistoricalPrice {
             avgPrice+=f;
             count++;
         }
-        avgPrice=avgPrice/count;
+        float r=1.0f;
+        if(Utilities.generateRandomInteger(1, 100)%2==0) r=-1.0f;
+        avgPrice=avgPrice/count;// - avgPrice*0.10f*r;
         
         return avgPrice;
+    }
+    
+    public int getValueAsInt(String s)
+    {
+        float value=this.getPrice(s);
+        int res=Math.round(value);
+        return res;
     }
 }

@@ -30,6 +30,8 @@ public class RandomAsk extends AuctionAsk
         this.setMinimumProfit(Utilities.generateRandomInteger(40, 50));
         this.setPreferredProfit(Utilities.generateRandomInteger(51, 100));
         
+        HistoricalPrice.getInstance().addPrice("MINIMUM_PROFIT", this.getMinimumProfit()*1.0f);
+        HistoricalPrice.getInstance().addPrice("PREFERRED_PROFIT", this.getPreferredProfit()*1.0f);
     }
      
 }

@@ -33,6 +33,10 @@ public class Auction implements Runnable {
     private final String BID_AUCTION_ASK_LOCK = "BID AUCTION ASK LOCK";
     private final String NOTIFIED_BID_LOCK = "NOTIFIED BID LOCK";
     
+    private Float firstHighestPrice;
+    private Float secondHighestPrice;
+    private Float initialOfferPrice;
+    
 
     boolean isRunning;
 
@@ -263,11 +267,11 @@ public class Auction implements Runnable {
                 for (IdentityResource ir: nextBid.getIdentityResources())
                 {
                     // TODO why get cost is null
-                    // HistoricalPrice.getInstance().addPrice(ir.getResourceType(), ir.getCost()*nextBid.getPreferredPrice()*1.0f);
+                    HistoricalPrice.getInstance().addPrice(ir.getResourceType(), ir.getPriority().getLevel());
                 }
             }
             if (nextBid != null) {
-                Logger.getLogger(Auction.class.getName()).log(Level.INFO, "a {0} was detected by {1} to search and auction ask winner", new Object[]{nextBid, FederatedCoordinator.getInstance()});
+                Logger.getLogger(Auction.class.getName()).log(Level.INFO, "a {0} was detected by {1} to search and auction winner ask", new Object[]{nextBid, FederatedCoordinator.getInstance()});
 
                 ArrayList<AuctionAsk> askList = this.getCurrentAsks();
                 ArrayList<AuctionAsk> winnerAskList = this.compareWithCheapestAsk(nextBid, askList);
@@ -287,6 +291,8 @@ public class Auction implements Runnable {
                         oneWinnerBid=nextBid;
                         float willingToPay = oneWinnerBid.getPreferredPrice();
                         float askPrice = oneWinnerAsk.calculateCurrentPrice(willingToPay);
+                        if(this.initialOfferPrice==null)
+                            this.initialOfferPrice=askPrice;
                         float bidPrice = oneWinnerBid.calculateCurrentOffer(askPrice);
                         
                         lastPrice=bidPrice;
@@ -322,25 +328,30 @@ public class Auction implements Runnable {
             if(nextBid==null) stop();
         }
         
-        // ONE BID AND ASK WINNER FOR EACH AUCTION
+        // ONE BID AND WINNER ASK FOR EACH AUCTION
         if(oneWinnerAsk!=null && oneWinnerBid!=null)
         {
-            for(int i=0; i<priceList.size()-2; i++)
+            for(int i=0; i<priceList.size()-1; i++)
             {
-                for(int j=i+1; j<priceList.size()-1; j++)
+                for(int j=i+1; j<priceList.size(); j++)
                 {
                     float pi=priceList.get(i);
                     float pj=priceList.get(j);
                     
-                    if(pi>pj)
+                    if(pi<pj)
                     {
                         priceList.set(i, pj);
                         priceList.set(j, pi);
                     }
                 }
             }
+            this.firstHighestPrice=priceList.get(0);
+            this.secondHighestPrice=priceList.get(0);
             float secondLowPrice=priceList.get(0);
-            if(priceList.size()>1) secondLowPrice=priceList.get(1);
+            if(priceList.size()>1) {
+                secondLowPrice=priceList.get(1);
+                this.secondHighestPrice=priceList.get(1);
+            }
             
             IdentityProvider ip = oneWinnerBid.getAgent().getIdentityProvider();
 
@@ -403,8 +414,8 @@ public class Auction implements Runnable {
                 while (header.length() < 3) {
                     header = "0" + header;
                 }
-                footer = "  END BID # " + header + " ";
-                header = "  BEGIN BID # " + header + "  ";
+                footer = "  END AUCTION # " + header + " ";
+                header = "  BEGIN AUCTION # " + header + "  ";
                 while (header.length() < 16 + 18 * 3 + 2 * 2) {
                     if (header.length() % 2 == 0) {
                         header += "*";
@@ -423,7 +434,7 @@ public class Auction implements Runnable {
                 System.out.printf("%s%n%s%n",s,s);
                 System.out.println(s+header);
 
-                System.out.printf(s+"%-15s %-17s   %-17s   %-17s%n", "", "Initial Bid", "Ask Winner", "Adapted Bid");
+                System.out.printf(s+"%-15s %-17s   %-17s   %-17s%n", "", "Winner Bid", "Winner Ask", "Adapted Bid");
                 System.out.print(s);
                 for (int i = 0; i < 16 + 18 * 3 + 2 * 2; i++) {
                     System.out.print("-");
@@ -477,26 +488,32 @@ public class Auction implements Runnable {
                     price = bidInitial.getPreferredPrice();
                     bidTextInitial[0] = "Id=" + bidInitial.hashCode();
                     //TODO check how to pass the price
-                    bidTextInitial[1] = "Second-Highest";
-                    bidTextInitial[2] = "Price=" + Math.round(bidInitial.getPreferredPrice() * 100 + 0.5) / 100.0;
-                }
-                if (bidModified != null) {
-                    price = bidInitial.getPreferredPrice();
-                    bidTextModified[0] = "Id=" + bidModified.hashCode();
-                    //TODO check how to pass the price
-                    bidTextModified[1] = "Price=" + Math.round(bidModified.getPreferredPrice() * 100 + 0.5) / 100.0;
+                    bidTextInitial[1] = "F-H Price="+ Math.round(this.firstHighestPrice*100+0.5)/100.0;
+                    bidTextInitial[2] = "S-H Price=" + Math.round(this.secondHighestPrice*100+0.5)/100.0;
+                    // no required /////bidTextInitial[3] = "Price=" + Math.round(bidInitial.getPreferredPrice() * 100 + 0.5) / 100.0;
                 }
 
                 String[] askText = new String[]{"--", "--", "--", "--", "--"};
+                int icommission=0;
                 if (ask != null) {
+                    price=this.secondHighestPrice;
+                    if (bidModified!=null) price=bidModified.getPreferredPrice();
                     int revenue = ask.getServiceProvider().getRevenue();
-                    int icommission = Math.round(ask.calculateCurrentPrice(price) * FederatedCoordinator.getDefaultCommission());
+                    icommission = Math.round(price * FederatedCoordinator.getDefaultCommission());
                     askText[0] = "Id=" + ask.hashCode();
                     //TODO check how to pass the price
-                    askText[1] = "Price=" + Math.round(ask.calculateCurrentPrice(price));
-                    askText[2] = "Profit=" + Math.round(ask.calculateCurrentPrice(price) - ask.getTotalCosts());
-                    askText[3] = "Fed.Commission=" + Math.round(icommission);
+                    askText[1] = "O-P Price=" + Math.round(this.initialOfferPrice*100+0.5)/100.0;
+                    double profit=price - ask.getTotalCosts();
+                    askText[2] = "Profit=" + Math.round(profit)+" ("+Math.round(profit/price*100)+"%)";
                     //askText[2]="Revenue="+Math.round(revenue);
+                }
+
+                if (bidModified != null) {
+                    price = bidModified.getPreferredPrice();
+                    bidTextModified[0] = "Id=" + bidModified.hashCode();
+                    //TODO check how to pass the price
+                    bidTextModified[1] = "T-A Price=" + Math.round(bidModified.getPreferredPrice() * 100 + 0.5) / 100.0;
+                    bidTextModified[2] = "Fed.Commission=" + Math.round(icommission);
                 }
 
                 for (int i = 0; i < 4; i++) {
@@ -549,6 +566,11 @@ public class Auction implements Runnable {
                     //System.out.printf("%-30s %-30s %n", bid.toString(), ask.toString());
                 }
                 System.out.println(s+footer);
+        System.out.println(s);
+        System.out.println(s+"F-H Price=First-Highest Price");
+        System.out.println(s+"S-H Price=Second-Highest Price");
+        System.out.println(s+"O-P Price=Opening Price");
+        System.out.println(s+"T-A Price=Total Price After Adaptation");
             }
         }
     }

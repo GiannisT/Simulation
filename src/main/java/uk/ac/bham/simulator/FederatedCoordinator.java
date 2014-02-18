@@ -6,8 +6,6 @@
 package uk.ac.bham.simulator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jfree.chart.demo.Graph;
@@ -256,6 +254,8 @@ public class FederatedCoordinator implements Runnable {
             
             if(Utilities.generateRandomInteger(1, 10)%2==0)
             {
+                if(this.bidList.size()==1 && AgentManager.getInstance().getTotalBid()>=1) continue;
+                
                 if((this.bidList.size()>2 && this.auctionAskList.size()>5) || (this.bidList.size()>0 && !AgentManager.getInstance().isRunning() && !ServiceProviderManager.getInstance().isRunning()))
                 {
                     System.out.println("*********** BEGIN A NEW AUCTION ***********");

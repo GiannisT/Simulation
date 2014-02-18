@@ -60,7 +60,7 @@ public class ModelledAsk extends AuctionAsk {
                 
        }else{
                                   
-            int Price=Utilities.generateRandomInteger(5, 25);
+            int Price=Utilities.generateRandomInteger(15, 25);
                         
             if(resourceTypeId==1){
                 PreviousAsksForAvailability.add(Price);
@@ -81,7 +81,12 @@ public class ModelledAsk extends AuctionAsk {
      }
         // TODO minimum profit and preferred profit trend
         this.setMinimumProfit(Utilities.generateRandomInteger(40, 50));
-        this.setPreferredProfit(Utilities.generateRandomInteger(51, 10));
+        this.setPreferredProfit(Utilities.generateRandomInteger(51, 100));
+        //this.setMinimumProfit(HistoricalPrice.getInstance().getValueAsInt("MINIMUM_PROFIT"));
+        //this.setPreferredProfit(HistoricalPrice.getInstance().getValueAsInt("PREFERRED_PROFIT"));
+        
+        HistoricalPrice.getInstance().addPrice("MINIMUM_PROFIT", this.getMinimumProfit()*1.0f);
+        HistoricalPrice.getInstance().addPrice("PREFERRED_PROFIT", this.getPreferredProfit()*1.0f);
    }
 }
     
