@@ -326,12 +326,12 @@ public class FederatedCoordinator implements Runnable {
         int c=0;
         for (Auction a : auctionList) {
             c++;
-            System.out.println("\u001B[0m");
+            System.out.println("");
             System.out.println();
             System.out.println();
             System.out.println("AUCTION # 0"+c);
             a.printWinnerAuctionAsk(c);
-            System.out.println("\u001B[0m");
+            System.out.println("");
         }
         System.out.println();
         System.out.println("Federated Commission (" + Math.round(FederatedCoordinator.getDefaultCommission() * 100.0f) + "%): " + Math.round(FederatedCoordinator.getInstance().getCommission()));

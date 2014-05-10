@@ -375,9 +375,6 @@ public class Auction implements Runnable {
     public void printWinnerAuctionAsk(int n) {
         String s="";
         
-        if(n%2==0) s="\u001B[35m"+s;
-        else s="\u001B[34m"+s;
-        
         System.out.println(s);
         System.out.println(s+"Number of bids: " + this.bidList.size());
         System.out.println(s+"Number of auction asks: " + this.auctionAskList.size());
