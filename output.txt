@@ -3,13 +3,15 @@
 *********** BEGIN A NEW AUCTION ***********
 *********** BEGIN A NEW AUCTION ***********
 *********** BEGIN A NEW AUCTION ***********
+*********** BEGIN A NEW AUCTION ***********
+*********** BEGIN A NEW AUCTION ***********
 [0m
 
 
 AUCTION # 01
 [34m
-[34mNumber of bids: 5
-[34mNumber of auction asks: 97
+[34mNumber of bids: 3
+[34mNumber of auction asks: 64
 [34m
 [34m//////////////////////////////////////////////////////////////////////////
 [34mRANDOM AUCTION  RANDOM AUCTION  RANDOM AUCTION  RANDOM AUCTION  
@@ -19,16 +21,16 @@ AUCTION # 01
 [34m**************************  BEGIN AUCTION # 001  *************************
 [34m                Current State       Matched Ask         Adapted State    
 [34m--------------------------------------------------------------------------
-[34m                Id=495173614        Id=1546585782       Id=952646909      
-[34m                F-H Price=657.01    O-P Price=640.01    T-A Price=1248.3  
-[34m                S-H Price=655.01    Profit=848 (68%)    Fed.Commission=62 
+[34m                Id=14607708         Id=1484451130       Id=93499693       
+[34m                F-H Price=698.01    O-P Price=604.01    T-A Price=1326.21 
+[34m                S-H Price=681.01    Profit=926 (70%)    Fed.Commission=66 
 [34m                --                  --                  --                
 [34mFeatures        Priority            Priority            Priority         
 [34m==========================================================================
-[34mAvailability    Low                 --                  --               
-[34mAnonymity       Low                 --                  Medium           
-[34mIntegrity       Low                 --                  --               
-[34mPerformance     Low                 --                  High             
+[34mAvailability    Low                 --                  High             
+[34mAnonymity       Low                 --                  --               
+[34mIntegrity       Low                 --                  Medium           
+[34mPerformance     Low                 --                  --               
 [34m***************************  END AUCTION # 001 ***************************
 [34m
 [34mF-H Price=First-Highest Price
@@ -41,8 +43,8 @@ AUCTION # 01
 
 AUCTION # 02
 [35m
-[35mNumber of bids: 4
-[35mNumber of auction asks: 100
+[35mNumber of bids: 3
+[35mNumber of auction asks: 76
 [35m
 [35m//////////////////////////////////////////////////////////////////////////
 [35mRANDOM AUCTION  RANDOM AUCTION  RANDOM AUCTION  RANDOM AUCTION  
@@ -52,16 +54,16 @@ AUCTION # 02
 [35m**************************  BEGIN AUCTION # 001  *************************
 [35m                Current State       Matched Ask         Adapted State    
 [35m--------------------------------------------------------------------------
-[35m                Id=325174786        Id=2014230334       Id=391460675      
-[35m                F-H Price=635.01    O-P Price=629.01    T-A Price=1397.01 
-[35m                S-H Price=628.01    Profit=997 (71%)    Fed.Commission=70 
+[35m                Id=1852614711       Id=530049924        Id=625527992      
+[35m                F-H Price=680.01    O-P Price=573.01    T-A Price=1292.01 
+[35m                S-H Price=601.01    Profit=892 (69%)    Fed.Commission=65 
 [35m                --                  --                  --                
 [35mFeatures        Priority            Priority            Priority         
 [35m==========================================================================
 [35mAvailability    Low                 --                  --               
 [35mAnonymity       Low                 --                  --               
 [35mIntegrity       Low                 --                  High             
-[35mPerformance     Low                 --                  High             
+[35mPerformance     Low                 --                  Medium           
 [35m***************************  END AUCTION # 001 ***************************
 [35m
 [35mF-H Price=First-Highest Price
@@ -75,7 +77,7 @@ AUCTION # 02
 AUCTION # 03
 [34m
 [34mNumber of bids: 3
-[34mNumber of auction asks: 100
+[34mNumber of auction asks: 88
 [34m
 [34m//////////////////////////////////////////////////////////////////////////
 [34mRANDOM AUCTION  RANDOM AUCTION  RANDOM AUCTION  RANDOM AUCTION  
@@ -85,16 +87,16 @@ AUCTION # 03
 [34m**************************  BEGIN AUCTION # 001  *************************
 [34m                Current State       Matched Ask         Adapted State    
 [34m--------------------------------------------------------------------------
-[34m                Id=237012230        Id=2029868072       Id=1884298830     
-[34m                F-H Price=699.01    O-P Price=604.01    T-A Price=1328.11 
-[34m                S-H Price=696.01    Profit=928 (70%)    Fed.Commission=66 
+[34m                Id=786904912        Id=1306557758       Id=495238160      
+[34m                F-H Price=699.01    O-P Price=577.01    T-A Price=1328.11 
+[34m                S-H Price=680.01    Profit=928 (70%)    Fed.Commission=66 
 [34m                --                  --                  --                
 [34mFeatures        Priority            Priority            Priority         
 [34m==========================================================================
-[34mAvailability    Low                 --                  --               
-[34mAnonymity       Low                 --                  --               
-[34mIntegrity       Low                 --                  High             
-[34mPerformance     Low                 --                  Medium           
+[34mAvailability    Low                 --                  High             
+[34mAnonymity       Low                 --                  Medium           
+[34mIntegrity       Low                 --                  --               
+[34mPerformance     Low                 --                  --               
 [34m***************************  END AUCTION # 001 ***************************
 [34m
 [34mF-H Price=First-Highest Price
@@ -118,15 +120,15 @@ AUCTION # 04
 [35m**************************  BEGIN AUCTION # 001  *************************
 [35m                Current State       Matched Ask         Adapted State    
 [35m--------------------------------------------------------------------------
-[35m                Id=1067469862       Id=887583596        Id=253580646      
-[35m                F-H Price=698.01    O-P Price=587.01    T-A Price=1535.61 
-[35m                S-H Price=667.01    Profit=1136 (74%)   Fed.Commission=77 
+[35m                Id=1295948131       Id=1221089843       Id=1436098081     
+[35m                F-H Price=668.01    O-P Price=590.01    T-A Price=1469.61 
+[35m                S-H Price=650.01    Profit=1070 (73%)   Fed.Commission=73 
 [35m                --                  --                  --                
 [35mFeatures        Priority            Priority            Priority         
 [35m==========================================================================
 [35mAvailability    Low                 --                  --               
-[35mAnonymity       Low                 --                  High             
-[35mIntegrity       Low                 --                  --               
+[35mAnonymity       Low                 --                  --               
+[35mIntegrity       Low                 --                  High             
 [35mPerformance     Low                 --                  High             
 [35m***************************  END AUCTION # 001 ***************************
 [35m
@@ -151,16 +153,82 @@ AUCTION # 05
 [34m**************************  BEGIN AUCTION # 001  *************************
 [34m                Current State       Matched Ask         Adapted State    
 [34m--------------------------------------------------------------------------
-[34m                Id=1196085910       Id=2029868072       Id=624392115      
-[34m                F-H Price=685.01    O-P Price=604.01    T-A Price=1301.51 
-[34m                S-H Price=675.01    Profit=902 (69%)    Fed.Commission=65 
+[34m                Id=1503260569       Id=155276228        Id=143892163      
+[34m                F-H Price=673.01    O-P Price=601.01    T-A Price=1278.7  
+[34m                S-H Price=670.01    Profit=879 (69%)    Fed.Commission=64 
 [34m                --                  --                  --                
 [34mFeatures        Priority            Priority            Priority         
 [34m==========================================================================
 [34mAvailability    Low                 --                  --               
-[34mAnonymity       Low                 --                  High             
+[34mAnonymity       Low                 --                  --               
+[34mIntegrity       Low                 --                  High             
+[34mPerformance     Low                 --                  Medium           
+[34m***************************  END AUCTION # 001 ***************************
+[34m
+[34mF-H Price=First-Highest Price
+[34mS-H Price=Second-Highest Price
+[34mO-P Price=Opening Price
+[34mT-A Price=Total Price After Adaptation
+[0m
+[0m
+
+
+AUCTION # 06
+[35m
+[35mNumber of bids: 2
+[35mNumber of auction asks: 100
+[35m
+[35m//////////////////////////////////////////////////////////////////////////
+[35mRANDOM AUCTION  RANDOM AUCTION  RANDOM AUCTION  RANDOM AUCTION  
+[35m\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+[35m
+[35m
+[35m**************************  BEGIN AUCTION # 001  *************************
+[35m                Current State       Matched Ask         Adapted State    
+[35m--------------------------------------------------------------------------
+[35m                Id=534932891        Id=1250552695       Id=573995801      
+[35m                F-H Price=640.01    O-P Price=612.01    T-A Price=1216.01 
+[35m                S-H Price=604.01    Profit=816 (67%)    Fed.Commission=61 
+[35m                --                  --                  --                
+[35mFeatures        Priority            Priority            Priority         
+[35m==========================================================================
+[35mAvailability    Low                 --                  --               
+[35mAnonymity       Low                 --                  --               
+[35mIntegrity       Low                 --                  Medium           
+[35mPerformance     Low                 --                  High             
+[35m***************************  END AUCTION # 001 ***************************
+[35m
+[35mF-H Price=First-Highest Price
+[35mS-H Price=Second-Highest Price
+[35mO-P Price=Opening Price
+[35mT-A Price=Total Price After Adaptation
+[0m
+[0m
+
+
+AUCTION # 07
+[34m
+[34mNumber of bids: 1
+[34mNumber of auction asks: 100
+[34m
+[34m//////////////////////////////////////////////////////////////////////////
+[34mRANDOM AUCTION  RANDOM AUCTION  RANDOM AUCTION  RANDOM AUCTION  
+[34m\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+[34m
+[34m
+[34m**************************  BEGIN AUCTION # 001  *************************
+[34m                Current State       Matched Ask         Adapted State    
+[34m--------------------------------------------------------------------------
+[34m                Id=616691676        Id=1306557758       Id=1829990955     
+[34m                F-H Price=618.01    O-P Price=580.01    T-A Price=988.8   
+[34m                S-H Price=618.01    Profit=589 (60%)    Fed.Commission=49 
+[34m                --                  --                  --                
+[34mFeatures        Priority            Priority            Priority         
+[34m==========================================================================
+[34mAvailability    Low                 --                  --               
+[34mAnonymity       Low                 --                  --               
 [34mIntegrity       Low                 --                  Medium           
-[34mPerformance     Low                 --                  --               
+[34mPerformance     Low                 --                  Medium           
 [34m***************************  END AUCTION # 001 ***************************
 [34m
 [34mF-H Price=First-Highest Price
@@ -169,11 +237,14 @@ AUCTION # 05
 [34mT-A Price=Total Price After Adaptation
 [0m
 
-Federated Commission (5%): 340
+Federated Commission (5%): 444
 +++++ END +++++
-+++++ 5 AUCTIONS +++++
++++++ 7 AUCTIONS +++++
 
 *** Ready for new task ***
+*********** BEGIN A NEW AUCTION ***********
+*********** BEGIN A NEW AUCTION ***********
+*********** BEGIN A NEW AUCTION ***********
 *********** BEGIN A NEW AUCTION ***********
 *********** BEGIN A NEW AUCTION ***********
 *********** BEGIN A NEW AUCTION ***********
@@ -183,7 +254,7 @@ Federated Commission (5%): 340
 
 AUCTION # 01
 [34m
-[34mNumber of bids: 6
+[34mNumber of bids: 3
 [34mNumber of auction asks: 100
 [34m
 [34m//////////////////////////////////////////////////////////////////////////
@@ -194,16 +265,16 @@ AUCTION # 01
 [34m**************************  BEGIN AUCTION # 001  *************************
 [34m                Current State       Matched Ask         Adapted State    
 [34m--------------------------------------------------------------------------
-[34m                Id=1758699324       Id=188638583        Id=1118941840     
-[34m                F-H Price=697.01    O-P Price=600.01    T-A Price=1533.41 
-[34m                S-H Price=678.01    Profit=1133 (74%)   Fed.Commission=77 
+[34m                Id=413365522        Id=324730209        Id=75373366       
+[34m                F-H Price=668.01    O-P Price=612.01    T-A Price=1068.8  
+[34m                S-H Price=644.01    Profit=669 (63%)    Fed.Commission=53 
 [34m                --                  --                  --                
 [34mFeatures        Priority            Priority            Priority         
 [34m==========================================================================
 [34mAvailability    Low                 --                  --               
-[34mAnonymity       Low                 --                  --               
-[34mIntegrity       Low                 --                  High             
-[34mPerformance     Low                 --                  High             
+[34mAnonymity       Low                 --                  Medium           
+[34mIntegrity       Low                 --                  Medium           
+[34mPerformance     Low                 --                  --               
 [34m***************************  END AUCTION # 001 ***************************
 [34m
 [34mF-H Price=First-Highest Price
@@ -227,15 +298,15 @@ AUCTION # 02
 [35m**************************  BEGIN AUCTION # 001  *************************
 [35m                Current State       Matched Ask         Adapted State    
 [35m--------------------------------------------------------------------------
-[35m                Id=762801509        Id=2075072820       Id=1139676697     
-[35m                F-H Price=661.01    O-P Price=612.01    T-A Price=1255.91 
-[35m                S-H Price=656.01    Profit=856 (68%)    Fed.Commission=63 
+[35m                Id=984675636        Id=934430470        Id=1664606940     
+[35m                F-H Price=679.01    O-P Price=590.01    T-A Price=1493.81 
+[35m                S-H Price=625.01    Profit=1094 (73%)   Fed.Commission=75 
 [35m                --                  --                  --                
 [35mFeatures        Priority            Priority            Priority         
 [35m==========================================================================
-[35mAvailability    Low                 --                  High             
-[35mAnonymity       Low                 --                  --               
-[35mIntegrity       Low                 --                  Medium           
+[35mAvailability    Low                 --                  --               
+[35mAnonymity       Low                 --                  High             
+[35mIntegrity       Low                 --                  High             
 [35mPerformance     Low                 --                  --               
 [35m***************************  END AUCTION # 001 ***************************
 [35m
@@ -249,7 +320,7 @@ AUCTION # 02
 
 AUCTION # 03
 [34m
-[34mNumber of bids: 4
+[34mNumber of bids: 3
 [34mNumber of auction asks: 100
 [34m
 [34m//////////////////////////////////////////////////////////////////////////
@@ -260,15 +331,15 @@ AUCTION # 03
 [34m**************************  BEGIN AUCTION # 001  *************************
 [34m                Current State       Matched Ask         Adapted State    
 [34m--------------------------------------------------------------------------
-[34m                Id=614458460        Id=188638583        Id=1979313056     
-[34m                F-H Price=691.01    O-P Price=607.01    T-A Price=1520.21 
-[34m                S-H Price=681.01    Profit=1120 (74%)   Fed.Commission=76 
+[34m                Id=840471495        Id=1804470146       Id=1356542296     
+[34m                F-H Price=685.01    O-P Price=607.01    T-A Price=1507.01 
+[34m                S-H Price=656.01    Profit=1107 (73%)   Fed.Commission=75 
 [34m                --                  --                  --                
 [34mFeatures        Priority            Priority            Priority         
 [34m==========================================================================
-[34mAvailability    Low                 --                  High             
+[34mAvailability    Low                 --                  --               
 [34mAnonymity       Low                 --                  High             
-[34mIntegrity       Low                 --                  --               
+[34mIntegrity       Low                 --                  High             
 [34mPerformance     Low                 --                  --               
 [34m***************************  END AUCTION # 001 ***************************
 [34m
@@ -282,7 +353,7 @@ AUCTION # 03
 
 AUCTION # 04
 [35m
-[35mNumber of bids: 6
+[35mNumber of bids: 4
 [35mNumber of auction asks: 100
 [35m
 [35m//////////////////////////////////////////////////////////////////////////
@@ -293,16 +364,16 @@ AUCTION # 04
 [35m**************************  BEGIN AUCTION # 001  *************************
 [35m                Current State       Matched Ask         Adapted State    
 [35m--------------------------------------------------------------------------
-[35m                Id=2101962444       Id=2075072820       Id=866973175      
-[35m                F-H Price=676.01    O-P Price=612.01    T-A Price=1487.21 
-[35m                S-H Price=673.01    Profit=1087 (73%)   Fed.Commission=74 
+[35m                Id=965680888        Id=1664764237       Id=1015075003     
+[35m                F-H Price=694.01    O-P Price=604.01    T-A Price=1110.4  
+[35m                S-H Price=634.01    Profit=710 (64%)    Fed.Commission=56 
 [35m                --                  --                  --                
 [35mFeatures        Priority            Priority            Priority         
 [35m==========================================================================
 [35mAvailability    Low                 --                  --               
-[35mAnonymity       Low                 --                  High             
+[35mAnonymity       Low                 --                  Medium           
 [35mIntegrity       Low                 --                  --               
-[35mPerformance     Low                 --                  High             
+[35mPerformance     Low                 --                  Medium           
 [35m***************************  END AUCTION # 001 ***************************
 [35m
 [35mF-H Price=First-Highest Price
@@ -310,7 +381,106 @@ AUCTION # 04
 [35mO-P Price=Opening Price
 [35mT-A Price=Total Price After Adaptation
 [0m
+[0m
 
-Federated Commission (5%): 290
+
+AUCTION # 05
+[34m
+[34mNumber of bids: 3
+[34mNumber of auction asks: 100
+[34m
+[34m//////////////////////////////////////////////////////////////////////////
+[34mMODELLED AUCTION  MODELLED AUCTION  MODELLED AUCTION  MODELLED AUCTION  
+[34m\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+[34m
+[34m
+[34m**************************  BEGIN AUCTION # 001  *************************
+[34m                Current State       Matched Ask         Adapted State    
+[34m--------------------------------------------------------------------------
+[34m                Id=128094496        Id=1105579978       Id=245799655      
+[34m                F-H Price=695.01    O-P Price=603.01    T-A Price=1320.51 
+[34m                S-H Price=646.01    Profit=921 (70%)    Fed.Commission=66 
+[34m                --                  --                  --                
+[34mFeatures        Priority            Priority            Priority         
+[34m==========================================================================
+[34mAvailability    Low                 --                  High             
+[34mAnonymity       Low                 --                  --               
+[34mIntegrity       Low                 --                  Medium           
+[34mPerformance     Low                 --                  --               
+[34m***************************  END AUCTION # 001 ***************************
+[34m
+[34mF-H Price=First-Highest Price
+[34mS-H Price=Second-Highest Price
+[34mO-P Price=Opening Price
+[34mT-A Price=Total Price After Adaptation
+[0m
+[0m
+
+
+AUCTION # 06
+[35m
+[35mNumber of bids: 2
+[35mNumber of auction asks: 100
+[35m
+[35m//////////////////////////////////////////////////////////////////////////
+[35mMODELLED AUCTION  MODELLED AUCTION  MODELLED AUCTION  MODELLED AUCTION  
+[35m\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+[35m
+[35m
+[35m**************************  BEGIN AUCTION # 001  *************************
+[35m                Current State       Matched Ask         Adapted State    
+[35m--------------------------------------------------------------------------
+[35m                Id=1454176402       Id=1978885554       Id=1490223341     
+[35m                F-H Price=618.01    O-P Price=590.01    T-A Price=1174.2  
+[35m                S-H Price=614.01    Profit=774 (66%)    Fed.Commission=59 
+[35m                --                  --                  --                
+[35mFeatures        Priority            Priority            Priority         
+[35m==========================================================================
+[35mAvailability    Low                 --                  Medium           
+[35mAnonymity       Low                 --                  High             
+[35mIntegrity       Low                 --                  --               
+[35mPerformance     Low                 --                  --               
+[35m***************************  END AUCTION # 001 ***************************
+[35m
+[35mF-H Price=First-Highest Price
+[35mS-H Price=Second-Highest Price
+[35mO-P Price=Opening Price
+[35mT-A Price=Total Price After Adaptation
+[0m
+[0m
+
+
+AUCTION # 07
+[34m
+[34mNumber of bids: 1
+[34mNumber of auction asks: 100
+[34m
+[34m//////////////////////////////////////////////////////////////////////////
+[34mMODELLED AUCTION  MODELLED AUCTION  MODELLED AUCTION  MODELLED AUCTION  
+[34m\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+[34m
+[34m
+[34m**************************  BEGIN AUCTION # 001  *************************
+[34m                Current State       Matched Ask         Adapted State    
+[34m--------------------------------------------------------------------------
+[34m                Id=1050264989       Id=1664764237       Id=2029486621     
+[34m                F-H Price=679.01    O-P Price=604.01    T-A Price=1290.11 
+[34m                S-H Price=679.01    Profit=890 (69%)    Fed.Commission=65 
+[34m                --                  --                  --                
+[34mFeatures        Priority            Priority            Priority         
+[34m==========================================================================
+[34mAvailability    Low                 --                  High             
+[34mAnonymity       Low                 --                  --               
+[34mIntegrity       Low                 --                  --               
+[34mPerformance     Low                 --                  Medium           
+[34m***************************  END AUCTION # 001 ***************************
+[34m
+[34mF-H Price=First-Highest Price
+[34mS-H Price=Second-Highest Price
+[34mO-P Price=Opening Price
+[34mT-A Price=Total Price After Adaptation
+[0m
+
+Federated Commission (5%): 449
 +++++ END +++++
-+++++ 4 AUCTIONS +++++
++++++ 7 AUCTIONS +++++
