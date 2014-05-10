@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jfree.chart.demo.Graph;
 import static uk.ac.bham.simulator.FederatedCoordinator.Initialtime;
 
 /**
@@ -203,8 +202,6 @@ public class Auction implements Runnable {
             }
         }
 
-        Graph.setChartValues((Math.floor((bid.getTimeOfSubmission() / 6000) * 100) / 100), (double) (Math.floor(((System.currentTimeMillis() - Initialtime) / 6000) * 100) / 100)); //update the dataset that will be used to develop the graph
-
         return winnerAskList;
     }
 
@@ -376,9 +373,7 @@ public class Auction implements Runnable {
     }
 
     public void printWinnerAuctionAsk(int n) {
-        String s=""+n;
-        while (s.length()<3) s="0"+s;
-        s=s+" ";
+        String s="";
         
         if(n%2==0) s="\u001B[35m"+s;
         else s="\u001B[34m"+s;

@@ -5,10 +5,14 @@
  */
 package uk.ac.bham.simulator;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jfree.chart.demo.Graph;
+import org.apache.commons.io.output.TeeOutputStream;
 
 /**
  *
@@ -335,57 +339,67 @@ public class FederatedCoordinator implements Runnable {
     }
 
     public static void main(String[] args) {
-        if(args.length>1 && args[1].equals("--debug"))
-        {
-            FederatedCoordinator.debug=true;
-            
-        }
-        
-        Initialtime = (double) System.currentTimeMillis();
-        FederatedCoordinator.getInstance().start();
-
-        AgentManager.getInstance().setRandom();
-        ServiceProviderManager.getInstance().setRandom();
-        AgentManager.getInstance().start();
-        ServiceProviderManager.getInstance().start();
-            //Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-        //public void run() {
-
-        boolean working = true;
-        while (working) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            if (!FederatedCoordinator.getInstance().isRunning() && !AgentManager.getInstance().isRunning() && !ServiceProviderManager.getInstance().isRunning()) {
-                working = false;
-            }
-        }
-              //}}));
-
-        
-         System.out.println();
-         System.out.println("*** Ready for new task ***");
-         FederatedCoordinator.getInstance().clear();
-         AgentManager.clear();
-         ServiceProviderManager.clear();
-        
-         FederatedCoordinator.getInstance().start();
-         AgentManager.getInstance().setModelled();
-         ServiceProviderManager.getInstance().setModelled();
-         AgentManager.getInstance().start();
-         ServiceProviderManager.getInstance().start();
-
          try {
-         Thread.sleep(15000);
-         } catch (InterruptedException ex) {
+             PrintStream defaultOut=System.out;
+             FileOutputStream fos = new FileOutputStream(new File("output.txt"));
+             TeeOutputStream myOut=new TeeOutputStream(defaultOut, fos);
+             PrintStream ps=new PrintStream(myOut);
+             System.setOut(ps);
+             
+             
+             if(args.length>1 && args[1].equals("--debug"))
+             {
+                 FederatedCoordinator.debug=true;
+                 
+             }
+             
+             Initialtime = (double) System.currentTimeMillis();
+             FederatedCoordinator.getInstance().start();
+             
+             AgentManager.getInstance().setRandom();
+             ServiceProviderManager.getInstance().setRandom();
+             AgentManager.getInstance().start();
+             ServiceProviderManager.getInstance().start();
+             //Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+             //public void run() {
+             
+             boolean working = true;
+             while (working) {
+                 try {
+                     Thread.sleep(2000);
+                 } catch (InterruptedException ex) {
+                     Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+                 if (!FederatedCoordinator.getInstance().isRunning() && !AgentManager.getInstance().isRunning() && !ServiceProviderManager.getInstance().isRunning()) {
+                     working = false;
+                 }
+             }
+             //}}));
+             
+             
+             System.out.println();
+             System.out.println("*** Ready for new task ***");
+             FederatedCoordinator.getInstance().clear();
+             AgentManager.clear();
+             ServiceProviderManager.clear();
+             
+             FederatedCoordinator.getInstance().start();
+             AgentManager.getInstance().setModelled();
+             ServiceProviderManager.getInstance().setModelled();
+             AgentManager.getInstance().start();
+             ServiceProviderManager.getInstance().start();
+             
+             try {
+                 Thread.sleep(15000);
+             } catch (InterruptedException ex) {
+                 Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+             }
+             
+             System.setOut(defaultOut);
+             System.out.println("\nNote: The complete output could be found in file 'output.txt'.");
+         } catch (FileNotFoundException ex) {
          Logger.getLogger(FederatedCoordinator.class.getName()).log(Level.SEVERE, null, ex);
          }
-         
-         /*
-         Graph.GenerateGraph();
-         */
     }
 
     @Override
